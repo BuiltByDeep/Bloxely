@@ -3,19 +3,18 @@ import { useDashboard } from '../context/DashboardContext';
 import { useDashboardSelectors } from '../hooks/useDashboardSelectors';
 import { useDashboardActions } from '../hooks/useDashboardActions';
 import { useBeforeUnload } from '../hooks/useBeforeUnload';
-import { widgetFactory } from '../services/WidgetFactory';
 import FreeLayoutManager from './GridLayoutManager';
 import WidgetRenderer from './WidgetRenderer';
 import PersistenceStatus from './PersistenceStatus';
 import ThemeToggle from './ThemeToggle';
 import WallpaperSelector from './WallpaperSelector';
+import WidgetDropdown from './WidgetDropdown';
 import type { WidgetType } from '../types/dashboard';
 
 const Dashboard: React.FC = () => {
   const { isLoading, persistenceEnabled } = useDashboard();
   const { hasWidgets, getWidgetCount, widgets } = useDashboardSelectors();
   const { addWidget } = useDashboardActions();
-  const availableWidgets = widgetFactory.getAvailableWidgets();
   
   // Save state before page unload
   useBeforeUnload();
@@ -41,34 +40,18 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <header className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700/50 p-4 shadow-lg transition-colors duration-300">
+      <header className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700/50 p-4 shadow-lg transition-colors duration-300 relative z-[100]">
         <div className="w-full px-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Bloxely</h1>
           <div className="flex items-center gap-3">
             <WallpaperSelector />
             <ThemeToggle />
-            <select 
-              className="bg-white dark:bg-slate-700/80 hover:bg-slate-50 dark:hover:bg-slate-600/80 px-4 py-2 rounded-lg transition-all duration-200 border border-slate-300 dark:border-slate-600/50 cursor-pointer text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              onChange={(e) => {
-                if (e.target.value) {
-                  handleAddWidget(e.target.value as WidgetType);
-                  e.target.value = ''; // Reset selection
-                }
-              }}
-              defaultValue=""
-            >
-              <option value="" disabled>Add Widget</option>
-              {availableWidgets.map((widget) => (
-                <option key={widget.type} value={widget.type} className="bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200">
-                  {widget.icon} {widget.name}
-                </option>
-              ))}
-            </select>
+            <WidgetDropdown onAddWidget={handleAddWidget} />
           </div>
         </div>
       </header>
       
-      <main className="w-full p-0 m-0 bg-transparent min-h-screen">
+      <main className="w-full p-0 m-0 bg-transparent min-h-screen relative z-[1]">
         {!hasWidgets ? (
           <div className="text-center py-20 w-full">
             <div className="mb-6">

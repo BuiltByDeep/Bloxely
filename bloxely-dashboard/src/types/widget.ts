@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import type { WidgetType, WidgetData, WidgetConfig } from './dashboard';
 
 export interface WidgetDefinition {

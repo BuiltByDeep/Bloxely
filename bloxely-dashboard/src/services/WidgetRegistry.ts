@@ -85,6 +85,15 @@ const defaultWidgets: WidgetDefinition[] = [
       tasks: [],
     },
   },
+  {
+    type: 'custom-image',
+    name: 'Custom Image',
+    description: 'Upload and manage custom background images',
+    icon: '🖼️',
+    defaultSize: { w: 8, h: 6, minW: 6, minH: 4 },
+    defaultConfig: { title: 'Custom Background' },
+    defaultContent: { imageUrl: null },
+  },
 ];
 
 // Register all default widgets

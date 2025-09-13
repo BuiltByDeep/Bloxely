@@ -294,8 +294,8 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
   return (
     <div
       ref={containerRef}
-      className={`free-layout-container w-full relative min-h-screen overflow-hidden ${draggingWidget.current ? 'dragging-active' : ''}`}
-      style={{ cursor: draggingWidget.current ? 'grabbing' : 'default' }}
+      className={`free-layout-container w-full relative min-h-screen ${draggingWidget.current ? 'dragging-active' : ''}`}
+      style={{ cursor: draggingWidget.current ? 'grabbing' : 'default', background: 'transparent' }}
     >
       {childArray.map((child, idx) => {
         const props: any = child.props || {};

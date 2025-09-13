@@ -43,8 +43,8 @@ describe('WallpaperSelector', () => {
     expect(screen.getByText('Grid')).toBeInTheDocument();
     expect(screen.getByText('Waves')).toBeInTheDocument();
     expect(screen.getByText('Geometric')).toBeInTheDocument();
-    expect(screen.getByText('Gradient')).toBeInTheDocument();
     expect(screen.getByText('Solid')).toBeInTheDocument();
+    expect(screen.getByText('Custom Image')).toBeInTheDocument();
   });
 
   it('should change wallpaper when option is selected', () => {

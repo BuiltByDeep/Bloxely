@@ -6,6 +6,7 @@ import StickyNoteWidget from '../components/widgets/StickyNoteWidget';
 import TodoWidget from '../components/widgets/TodoWidget';
 import PomodoroWidget from '../components/widgets/PomodoroWidget';
 import KanbanWidget from '../components/widgets/KanbanWidget';
+import CustomImageWidget from '../components/CustomImageWidget';
 import type { WidgetType, WidgetData, WidgetConfig, WidgetDefinition, BaseWidgetProps } from '../types';
 
 class WidgetFactoryService {
@@ -90,3 +91,4 @@ widgetFactory.registerComponent('todo', TodoWidget);
 widgetFactory.registerComponent('sticky-note', StickyNoteWidget);
 widgetFactory.registerComponent('pomodoro', PomodoroWidget);
 widgetFactory.registerComponent('kanban', KanbanWidget);
+widgetFactory.registerComponent('custom-image', CustomImageWidget);

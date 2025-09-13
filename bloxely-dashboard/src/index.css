@@ -36,98 +36,120 @@ html.dark body {
 
 /* Base wallpaper styling to ensure proper layering */
 body {
-  background-attachment: fixed !important;
-  background-position: 0 0 !important;
-  background-repeat: repeat !important;
-  position: relative !important;
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: repeat;
+  position: relative;
+  background-size: auto;
 }
 
 /* Dots Pattern (Default) */
 body.wallpaper-dots:not(.dark) {
   background-color: #f8f9fa;
-  background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-image: radial-gradient(circle, #d1d5db 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
 }
 
 html.dark body.wallpaper-dots {
   background-color: #0f172a;
-  background-image: radial-gradient(circle, #334155 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-image: radial-gradient(circle, #475569 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
 }
 
 /* Grid Pattern */
 body.wallpaper-grid:not(.dark) {
   background-color: #f8f9fa;
   background-image: 
-    linear-gradient(rgba(209, 213, 219, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(209, 213, 219, 0.3) 1px, transparent 1px);
-  background-size: 20px 20px;
+    linear-gradient(rgba(209, 213, 219, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(209, 213, 219, 0.5) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
 }
 
 html.dark body.wallpaper-grid {
   background-color: #0f172a;
   background-image: 
-    linear-gradient(rgba(51, 65, 85, 0.4) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(51, 65, 85, 0.4) 1px, transparent 1px);
-  background-size: 20px 20px;
+    linear-gradient(rgba(71, 85, 105, 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(71, 85, 105, 0.6) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
 }
 
 /* Waves Pattern */
 body.wallpaper-waves:not(.dark) {
   background-color: #f8f9fa;
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
-  background-size: 100px 100px;
+    radial-gradient(ellipse 100px 40px at 50% 0%, rgba(209, 213, 219, 0.4), transparent 70%),
+    radial-gradient(ellipse 100px 40px at 50% 100%, rgba(209, 213, 219, 0.4), transparent 70%);
+  background-size: 80px 80px;
+  background-position: 0 0, 40px 40px;
+  background-attachment: fixed;
 }
 
 html.dark body.wallpaper-waves {
   background-color: #0f172a;
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
-  background-size: 100px 100px;
+    radial-gradient(ellipse 100px 40px at 50% 0%, rgba(71, 85, 105, 0.5), transparent 70%),
+    radial-gradient(ellipse 100px 40px at 50% 100%, rgba(71, 85, 105, 0.5), transparent 70%);
+  background-size: 80px 80px;
+  background-position: 0 0, 40px 40px;
+  background-attachment: fixed;
 }
 
 /* Geometric Pattern */
 body.wallpaper-geometric:not(.dark) {
   background-color: #f8f9fa;
   background-image: 
-    linear-gradient(45deg, rgba(209, 213, 219, 0.2) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(209, 213, 219, 0.2) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(209, 213, 219, 0.2) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(209, 213, 219, 0.2) 75%);
-  background-size: 40px 40px;
-  background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
-  }
+    linear-gradient(45deg, transparent 35%, rgba(209, 213, 219, 0.3) 35%, rgba(209, 213, 219, 0.3) 65%, transparent 65%),
+    linear-gradient(-45deg, transparent 35%, rgba(209, 213, 219, 0.3) 35%, rgba(209, 213, 219, 0.3) 65%, transparent 65%);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  background-attachment: fixed;
+}
 
 html.dark body.wallpaper-geometric {
   background-color: #0f172a;
   background-image: 
-    linear-gradient(45deg, rgba(51, 65, 85, 0.3) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(51, 65, 85, 0.3) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(51, 65, 85, 0.3) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(51, 65, 85, 0.3) 75%);
-  background-size: 40px 40px;
-  background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
-  }
-
-/* Gradient Pattern */
-body.wallpaper-gradient:not(.dark) {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 50%, #f1f5f9 100%);
+    linear-gradient(45deg, transparent 35%, rgba(71, 85, 105, 0.4) 35%, rgba(71, 85, 105, 0.4) 65%, transparent 65%),
+    linear-gradient(-45deg, transparent 35%, rgba(71, 85, 105, 0.4) 35%, rgba(71, 85, 105, 0.4) 65%, transparent 65%);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  background-attachment: fixed;
 }
 
-html.dark body.wallpaper-gradient {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+/* Custom Pattern - handled by JavaScript in WallpaperContext */
+body.wallpaper-custom:not(.dark) {
+  background-color: #f8f9fa;
+  background-image: none;
+}
+
+html.dark body.wallpaper-custom {
+  background-color: #0f172a;
+  background-image: none;
+}
+
+/* Main element styling for custom wallpaper */
+main.wallpaper-custom {
+  position: relative;
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 /* Solid Pattern */
 body.wallpaper-solid:not(.dark) {
   background-color: #f8f9fa;
+  background-image: none;
+  background-attachment: fixed;
 }
 
 html.dark body.wallpaper-solid {
   background-color: #0f172a;
+  background-image: none;
+  background-attachment: fixed;
 }
 
 body {
@@ -136,7 +158,7 @@ body {
   font-family: 'Inter', sans-serif;
   width: 100%;
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease, background-image 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 #root {
@@ -343,16 +365,210 @@ body {
   .clock-date-label {
     font-size: clamp(6px, 2vw, 14px);
   }
-  
+
   /* Time stays constant */
   .clock-time-text {
     font-size: 32px;
   }
-  
+
   .clock-widget-card.time-only .clock-time-text {
     font-size: 36px;
   }
-}/* Pomodoro Widget Styling */
+}
+
+/* Custom Image Widget Styling */
+.custom-image-widget {
+  font-family: 'Inter', sans-serif;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  container-type: size;
+}
+
+.custom-image-widget .widget-content {
+  padding: 0;
+}
+
+.custom-image-widget .widget-header {
+  padding: clamp(12px, 3cqw, 20px);
+}
+
+.custom-image-widget .widget-header h3 {
+  font-size: clamp(12px, 2.5cqw, 16px);
+}
+
+.custom-image-widget .widget-header span {
+  font-size: clamp(16px, 3cqw, 24px);
+}
+
+.custom-image-widget .upload-area {
+  width: clamp(200px, 70cqw, 320px);
+  height: clamp(180px, 50cqw, 256px);
+  border-radius: clamp(12px, 2cqw, 16px);
+}
+
+.custom-image-widget .upload-area .icon-container {
+  width: clamp(48px, 8cqw, 64px);
+  height: clamp(48px, 8cqw, 64px);
+}
+
+.custom-image-widget .upload-area .icon-container img,
+.custom-image-widget .upload-area .icon-container div {
+  width: 100%;
+  height: 100%;
+  border-radius: clamp(8px, 1.5cqw, 12px);
+}
+
+.custom-image-widget .upload-area .icon-container span {
+  font-size: clamp(20px, 4cqw, 32px);
+}
+
+.custom-image-widget .upload-area h3 {
+  font-size: clamp(14px, 3cqw, 18px);
+}
+
+.custom-image-widget .upload-area p {
+  font-size: clamp(11px, 2cqw, 14px);
+}
+
+.custom-image-widget .upload-area .file-hint {
+  font-size: clamp(9px, 1.5cqw, 12px);
+}
+
+.custom-image-widget .action-buttons {
+  gap: clamp(8px, 2cqw, 16px);
+  margin-top: clamp(16px, 3cqw, 24px);
+}
+
+.custom-image-widget .action-button {
+  padding: clamp(8px, 1.5cqw, 12px) clamp(12px, 2cqw, 16px);
+  font-size: clamp(11px, 2cqw, 14px);
+  border-radius: clamp(8px, 1.5cqw, 12px);
+}
+
+/* Responsive adjustments for smaller widgets */
+@container (max-width: 250px) {
+  .custom-image-widget .widget-content {
+    padding: 8px;
+  }
+
+  .custom-image-widget .widget-header {
+    padding: 8px 12px;
+  }
+
+  .custom-image-widget .widget-header h3 {
+    font-size: 11px;
+  }
+
+  .custom-image-widget .widget-header span {
+    font-size: 14px;
+  }
+
+  .custom-image-widget .upload-area {
+    width: 180px;
+    height: 140px;
+  }
+
+  .custom-image-widget .upload-area .icon-container {
+    width: 40px;
+    height: 40px;
+  }
+
+  .custom-image-widget .upload-area .icon-container span {
+    font-size: 18px;
+  }
+
+  .custom-image-widget .upload-area h3 {
+    font-size: 12px;
+  }
+
+  .custom-image-widget .upload-area p {
+    font-size: 10px;
+  }
+
+  .custom-image-widget .upload-area .file-hint {
+    font-size: 8px;
+  }
+
+  .custom-image-widget .action-buttons {
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .custom-image-widget .action-button {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+}
+
+@container (max-width: 200px) {
+  .custom-image-widget .widget-content {
+    padding: 6px;
+  }
+
+  .custom-image-widget .widget-header {
+    padding: 6px 8px;
+  }
+
+  .custom-image-widget .widget-header h3 {
+    font-size: 10px;
+  }
+
+  .custom-image-widget .widget-header span {
+    font-size: 12px;
+  }
+
+  .custom-image-widget .upload-area {
+    width: 140px;
+    height: 120px;
+  }
+
+  .custom-image-widget .upload-area .icon-container {
+    width: 32px;
+    height: 32px;
+  }
+
+  .custom-image-widget .upload-area .icon-container span {
+    font-size: 16px;
+  }
+
+  .custom-image-widget .upload-area h3 {
+    font-size: 11px;
+  }
+
+  .custom-image-widget .upload-area p {
+    font-size: 9px;
+  }
+
+  .custom-image-widget .action-buttons {
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .custom-image-widget .action-button {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+}
+
+/* Fallback for browsers without container query support */
+@supports not (container-type: size) {
+  .custom-image-widget .upload-area {
+    width: clamp(180px, 40vw, 320px);
+    height: clamp(160px, 35vw, 256px);
+  }
+
+  .custom-image-widget .upload-area h3 {
+    font-size: clamp(12px, 2.5vw, 18px);
+  }
+
+  .custom-image-widget .action-button {
+    font-size: clamp(10px, 2vw, 14px);
+  }
+}
+
+/* Pomodoro Widget Styling */
 .pomodoro-widget-card {
   font-family: 'Inter', sans-serif;
   border-radius: 16px;
@@ -3090,4 +3306,26 @@ button:active, .clickable:active {
 
 .goal-milestone-form-submit:hover {
   background-color: #2563eb;
+}
+
+/* Ensure wallpaper dropdown appears above all elements */
+.wallpaper-dropdown-container {
+  position: relative !important;
+  z-index: 999999 !important;
+}
+
+.wallpaper-dropdown {
+  position: absolute !important;
+  z-index: 999999 !important;
+}
+
+/* Ensure custom image upload modal appears above everything */
+.custom-image-backdrop {
+  position: fixed !important;
+  z-index: 1000000 !important;
+}
+
+.custom-image-modal {
+  position: fixed !important;
+  z-index: 1000001 !important;
 }
