@@ -1,0 +1,98 @@
+import React, { useRef, useEffect, useCallback } from 'react';
+import { useDashboardSelectors } from '../hooks/useDashboardSelectors';
+import { useDashboardActions } from '../hooks/useDashboardActions';
+import type { GridLayout } from '../types/dashboard';
+
+interface GridLayoutManagerProps {
+  children: React.ReactNode;
+}
+
+/**
+ * Simple absolute-position layout manager that allows free placement.
+ * It replaces the previous grid system by rendering children in absolute
+ * positioned containers and updating their x/y pixel positions in the layout state.
+ */
+const GridLayoutManager: React.FC<GridLayoutManagerProps> = ({ children }) => {
+  const { layout } = useDashboardSelectors();
+  const { updateLayout } = useDashboardActions();
+
+  const dragState = useRef<{ id?: string; startX: number; startY: number; origX: number; origY: number } | null>(null);
+
+  const updateItemPosition = useCallback(
+    (id: string, x: number, y: number) => {
+      const updated = layout.map((item) => (item.i === id ? { ...item, x: Math.round(x), y: Math.round(y) } : item));
+      updateLayout(updated);
+    },
+    [layout, updateLayout]
+  );
+
+  useEffect(() => {
+    const onPointerMove = (e: PointerEvent) => {
+      if (!dragState.current) return;
+      const ds = dragState.current;
+      const dx = e.clientX - ds.startX;
+      const dy = e.clientY - ds.startY;
+      updateItemPosition(ds.id as string, ds.origX + dx, ds.origY + dy);
+    };
+
+    const onPointerUp = () => {
+      dragState.current = null;
+    };
+
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+  }, [updateItemPosition]);
+
+  const childArray = React.Children.toArray(children) as React.ReactElement[];
+  const findLayout = (id: string) => layout.find((l) => l.i === id);
+
+  const onPointerDown = (e: React.PointerEvent, item: GridLayout) => {
+    if ((e as any).button === 2) return;
+    (e.target as Element).setPointerCapture(e.pointerId);
+    dragState.current = {
+      id: item.i,
+      startX: e.clientX,
+      startY: e.clientY,
+      origX: (item.x as number) || 0,
+      origY: (item.y as number) || 0,
+    };
+  };
+
+  return (
+    <div className="grid-layout-container relative w-full h-full" style={{ minHeight: 400 }}>
+      {childArray.map((child, idx) => {
+        const props: any = child.props || {};
+        const widgetId = props.widget?.id || props.widgetId || props['data-widget-id'] || `child-${idx}`;
+        const layoutItem = findLayout(widgetId) || { i: widgetId, x: 20 + idx * 20, y: 20 + idx * 20, w: 300, h: 200 };
+
+        const style: React.CSSProperties = {
+          position: 'absolute',
+          left: (layoutItem.x as number) || 0,
+          top: (layoutItem.y as number) || 0,
+          width: ((layoutItem.w as number) || 300) + 'px',
+          height: typeof layoutItem.h === 'number' ? `${layoutItem.h}px` : 'auto',
+          touchAction: 'none',
+          zIndex: 1,
+        };
+
+        return (
+          <div
+            key={layoutItem.i}
+            style={style}
+            onPointerDown={(e) => onPointerDown(e, layoutItem as GridLayout)}
+            className="widget-drag-wrapper"
+            data-widget-id={layoutItem.i}
+          >
+            {child}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default GridLayoutManager;
