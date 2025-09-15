@@ -107,6 +107,7 @@ body {
   max-width: 100vw;
   position: relative;
   overflow-x: hidden;
+  background-color: white;
 }
 
 /* Dots Pattern (Default) */
@@ -250,6 +251,12 @@ body {
   position: relative;
   margin-top: 0 !important;
   padding-top: 0 !important;
+  min-height: calc(100vh - 80px); /* Account for header height */
+}
+
+/* Ensure canvas fills viewport when scaled */
+.canvas-container[style*="scale"] {
+  min-height: 100vh;
 }
 
 /* Header specific positioning */

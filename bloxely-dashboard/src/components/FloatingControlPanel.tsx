@@ -47,15 +47,35 @@ const FloatingControlPanel: React.FC<FloatingControlPanelProps> = ({ appContaine
     // Apply zoom transform only to canvas content
     const scaleFactor = zoomLevel / 100;
 
-    canvasContainer.style.transform = `scale(${scaleFactor})`;
-    canvasContainer.style.transformOrigin = 'center top';
-    canvasContainer.style.transition = 'transform 0.3s ease';
+    if (scaleFactor === 1) {
+      // Reset to normal at 100%
+      canvasContainer.style.transform = '';
+      canvasContainer.style.transformOrigin = '';
+      canvasContainer.style.width = '';
+      canvasContainer.style.height = '';
+      canvasContainer.style.overflow = '';
+    } else {
+      // Scale down and expand dimensions to fill viewport
+      canvasContainer.style.transform = `scale(${scaleFactor})`;
+      canvasContainer.style.transformOrigin = 'center top';
+      
+      // Expand dimensions inversely to the scale to fill the viewport
+      const expandFactor = 1 / scaleFactor;
+      canvasContainer.style.width = `${expandFactor * 100}%`;
+      canvasContainer.style.height = `${expandFactor * 100}%`;
+      canvasContainer.style.overflow = 'visible';
+    }
+    
+    canvasContainer.style.transition = 'transform 0.3s ease, width 0.3s ease, height 0.3s ease';
 
     return () => {
       // Cleanup styles
       canvasContainer.style.transform = '';
       canvasContainer.style.transformOrigin = '';
       canvasContainer.style.transition = '';
+      canvasContainer.style.width = '';
+      canvasContainer.style.height = '';
+      canvasContainer.style.overflow = '';
     };
   }, [zoomLevel, appContainerRef]);
 
