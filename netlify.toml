@@ -1,6 +1,6 @@
 [build]
   base = "bloxely-dashboard"
-  publish = "bloxely-dashboard/dist"
+  publish = "dist"
   command = "npm run build"
 
 [build.environment]
