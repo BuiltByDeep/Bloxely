@@ -3493,7 +3493,7 @@ button:active, .clickable:active {
   z-index: 1000001 !important;
 }
 
-Music Player Widget Styles */
+/* Music Player Widget Styles */
 .music-player-widget {
   font-family: 'Inter', sans-serif;
   height: 100%;
