@@ -22,7 +22,7 @@ const ClockWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
   // Default colors
   const defaultTimeColor = '#ffffff';
   const defaultDateColor = '#d1d5db';
-  const defaultBackgroundColor = '#38BDF8';
+  const defaultBackgroundColor = '#111827';
 
   // Update time every second
   useEffect(() => {

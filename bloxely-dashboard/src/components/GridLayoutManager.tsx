@@ -170,18 +170,33 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
 
   const handleResizeMove = useCallback((e: MouseEvent) => {
     if (!resizingWidget.current) return;
-    
+
     const { startX, startY, startWidth, startHeight, element } = resizingWidget.current;
     const deltaX = e.clientX - startX;
     const deltaY = e.clientY - startY;
-    
-    const newWidth = Math.max(200, startWidth + deltaX);
-    const newHeight = Math.max(200, startHeight + deltaY);
-    
+
+    // Get the current zoom level from the canvas container
+    const canvasContainer = element.closest('.canvas-container') as HTMLElement;
+    let zoomLevel = 1;
+    if (canvasContainer) {
+      const transform = window.getComputedStyle(canvasContainer).transform;
+      if (transform && transform !== 'none') {
+        const matrix = new DOMMatrix(transform);
+        zoomLevel = matrix.a; // scale factor
+      }
+    }
+
+    // Adjust delta for zoom level to make resizing feel consistent
+    const adjustedDeltaX = deltaX / zoomLevel;
+    const adjustedDeltaY = deltaY / zoomLevel;
+
+    const newWidth = Math.max(200, startWidth + adjustedDeltaX);
+    const newHeight = Math.max(200, startHeight + adjustedDeltaY);
+
     // Update size directly on DOM element for immediate feedback
     element.style.width = `${newWidth}px`;
     element.style.height = `${newHeight}px`;
-    
+
     // Update state for persistence
     setWidgetSizes(prev =>
       prev.map(size =>
@@ -194,18 +209,52 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
 
   const handleDragMove = useCallback((e: MouseEvent) => {
     if (!draggingWidget.current) return;
-    
+
     const { startX, startY, startLeft, startTop, element, id } = draggingWidget.current;
     const deltaX = e.clientX - startX;
     const deltaY = e.clientY - startY;
-    
-    const newLeft = startLeft + deltaX;
-    const newTop = startTop + deltaY;
-    
+
+    // Get the current zoom level from the canvas container
+    const canvasContainer = element.closest('.canvas-container') as HTMLElement;
+    let zoomLevel = 1;
+    if (canvasContainer) {
+      const transform = window.getComputedStyle(canvasContainer).transform;
+      if (transform && transform !== 'none') {
+        const matrix = new DOMMatrix(transform);
+        zoomLevel = matrix.a; // scale factor
+      }
+    }
+
+    // Adjust delta for zoom level to make movement feel natural
+    const adjustedDeltaX = deltaX / zoomLevel;
+    const adjustedDeltaY = deltaY / zoomLevel;
+
+    let newLeft = startLeft + adjustedDeltaX;
+    let newTop = startTop + adjustedDeltaY;
+
+    // Use viewport dimensions for boundaries to allow movement across entire screen
+    const viewportWidth = window.innerWidth / zoomLevel;
+    const viewportHeight = window.innerHeight / zoomLevel;
+    const elementRect = element.getBoundingClientRect();
+    const elementWidth = elementRect.width / zoomLevel;
+    const elementHeight = elementRect.height / zoomLevel;
+
+    // Allow movement across entire viewport with more padding at lower zoom levels
+    const basePadding = 50;
+    const zoomPaddingMultiplier = 100 / zoomLevel; // More padding at lower zoom levels
+    const padding = basePadding * zoomPaddingMultiplier;
+    const minLeft = -padding;
+    const maxLeft = viewportWidth - elementWidth + padding;
+    const minTop = -padding;
+    const maxTop = viewportHeight - elementHeight + padding;
+
+    newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
+    newTop = Math.max(minTop, Math.min(maxTop, newTop));
+
     // Update position directly on DOM element for immediate feedback
     element.style.left = `${newLeft}px`;
     element.style.top = `${newTop}px`;
-    
+
     // Also update our ref to keep track of the position
     widgetPositionsRef.current[id] = { x: newLeft, y: newTop };
   }, []);

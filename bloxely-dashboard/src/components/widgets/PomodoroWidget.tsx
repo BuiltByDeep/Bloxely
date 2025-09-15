@@ -9,7 +9,7 @@ const PomodoroWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(25 * 60);
   const [mode, setMode] = useState<'work' | 'break'>('work');
-  const [colorTheme, setColorTheme] = useState<ColorTheme>('red');
+  const [colorTheme, setColorTheme] = useState<ColorTheme>('black');
   const [showColorPicker, setShowColorPicker] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
@@ -21,7 +21,7 @@ const PomodoroWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
     setIsRunning(pomodoroData.isRunning || false);
     setTimeRemaining(pomodoroData.timeRemaining || 25 * 60);
     setMode(pomodoroData.mode || 'work');
-    setColorTheme(pomodoroData.colorTheme || 'red');
+    setColorTheme(pomodoroData.colorTheme || 'black');
   }, [pomodoroData.isRunning, pomodoroData.timeRemaining, pomodoroData.mode, pomodoroData.colorTheme]);
 
   // Update parent component when state changes

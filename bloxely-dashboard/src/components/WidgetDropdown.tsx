@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { widgetFactory } from '../services/WidgetFactory';
-import { Clock, CheckSquare, StickyNote, Timer, KanbanSquare, Image } from 'lucide-react';
+import { Clock, CheckSquare, StickyNote, Timer, KanbanSquare, Image, Calendar } from 'lucide-react';
 import type { WidgetType } from '../types/dashboard';
 
 interface WidgetDropdownProps {
@@ -9,7 +9,7 @@ interface WidgetDropdownProps {
 
 const WidgetDropdown: React.FC<WidgetDropdownProps> = ({ onAddWidget }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const availableWidgets = widgetFactory.getAvailableWidgets();
+  const availableWidgets = widgetFactory.getAvailableWidgets().filter(widget => widget.type !== 'custom-wallpaper');
 
   const iconMap: Record<string, React.ReactNode> = {
     '🕐': <Clock size={20} />,
@@ -18,6 +18,7 @@ const WidgetDropdown: React.FC<WidgetDropdownProps> = ({ onAddWidget }) => {
     '⏰': <Timer size={20} />,
     '📋': <KanbanSquare size={20} />,
     '🖼️': <Image size={20} />,
+    '📅': <Calendar size={20} />,
   };
 
   const handleSelectWidget = (widgetType: WidgetType) => {
@@ -38,22 +39,22 @@ const WidgetDropdown: React.FC<WidgetDropdownProps> = ({ onAddWidget }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden">
-          <div className="py-2">
+        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden">
+          <div className="py-2 max-h-64 overflow-y-auto">
             {availableWidgets.map((widget) => (
               <button
                 key={widget.type}
                 onClick={() => handleSelectWidget(widget.type)}
-                className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-200 flex items-center gap-3 group"
+                className="w-full px-3 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-200 flex items-center gap-3 group"
               >
-                <div className="text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200">
+                <div className="text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200 flex-shrink-0">
                   {iconMap[widget.icon] || widget.icon}
                 </div>
-                <div className="flex-1">
-                  <div className="text-slate-900 dark:text-slate-100 font-medium">
+                <div className="flex-1 min-w-0">
+                  <div className="text-slate-900 dark:text-slate-100 font-medium text-sm truncate">
                     {widget.name}
                   </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
                     {widget.description}
                   </div>
                 </div>

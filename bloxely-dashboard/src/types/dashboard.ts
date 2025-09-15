@@ -1,4 +1,5 @@
-export type WidgetType = 'clock' | 'sticky-note' | 'todo' | 'pomodoro' | 'kanban';
+export type WidgetType = 'clock' | 'sticky-note' | 'todo' | 'pomodoro' | 'kanban' |
+                         'music-player' | 'custom-wallpaper' | 'personal-image' | 'habit-tracker' | 'image-collector' | 'priority-matrix' | 'youtube-player' | 'calendar' | 'voice-text-notes';
 
 export interface GridLayout {
   i: string; // widget id
@@ -62,6 +63,7 @@ export interface StickyNoteData {
   color: StickyNoteColor;
 }
 
+
 export interface PomodoroData {
   timeRemaining: number;
   isRunning: boolean;
@@ -90,5 +92,81 @@ export interface KanbanTask {
 export interface KanbanData {
   tasks: KanbanTask[];
 }
+
+// New productivity widget data types
+
+export interface MusicStation {
+  id: string;
+  name: string;
+  description: string;
+  source: 'youtube' | 'soundcloud' | 'spotify' | 'local';
+  streamUrl: string;
+  thumbnail: string;
+  category: 'lofi' | 'ambient' | 'jazz' | 'nature';
+  isLive: boolean;
+}
+
+export interface SleepTimerConfig {
+  enabled: boolean;
+  duration: number; // minutes
+  remaining: number;
+}
+
+export interface MusicPlayerData {
+  currentStation: MusicStation | null;
+  volume: number;
+  isPlaying: boolean;
+  isMinimized: boolean;
+  sleepTimer: SleepTimerConfig;
+  favoriteStations: string[];
+}
+
+
+
+export interface SavedImage {
+  id: string;
+  name: string;
+  dataUrl: string; // Base64 encoded image
+  thumbnail: string; // Compressed Base64 thumbnail
+  fileSize: number;
+  mimeType: string;
+  createdAt: Date;
+}
+
+export interface ImageCollectorData {
+  images: SavedImage[];
+  maxImages: number; // Default: 20
+  thumbnailSize: number; // Default: 150px
+}
+
+export interface PriorityMatrixData {
+  tasks: PriorityMatrixTask[];
+}
+
+export interface PriorityMatrixTask {
+  id: string;
+  content: string;
+  quadrant: 'do-first' | 'schedule' | 'delegate' | 'eliminate';
+  createdAt: Date;
+}
+
+export interface YouTubePlayerData {
+  videoId: string;
+  isPlaying: boolean;
+  volume: number;
+}
+
+export interface CalendarTask {
+  id: string;
+  content: string;
+  type: 'normal' | 'emergency';
+  date: string; // YYYY-MM-DD format
+}
+
+export interface CalendarData {
+  currentDate: string; // YYYY-MM-DD format for current month view
+  tasks: CalendarTask[];
+}
+
 
 

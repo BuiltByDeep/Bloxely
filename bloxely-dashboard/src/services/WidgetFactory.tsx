@@ -7,6 +7,12 @@ import TodoWidget from '../components/widgets/TodoWidget';
 import PomodoroWidget from '../components/widgets/PomodoroWidget';
 import KanbanWidget from '../components/widgets/KanbanWidget';
 import CustomImageWidget from '../components/CustomImageWidget';
+import PersonalImageWidget from '../components/widgets/PersonalImageWidget';
+import HabitWidget from '../components/HabitWidget';
+import PriorityMatrixWidget from '../components/widgets/PriorityMatrixWidget';
+import YouTubePlayerWidget from '../components/widgets/YouTubePlayerWidget';
+import CalendarWidget from '../components/widgets/CalendarWidget';
+import VoiceTextNotesWidget from '../components/widgets/VoiceTextNotesWidget';
 import type { WidgetType, WidgetData, WidgetConfig, WidgetDefinition, BaseWidgetProps } from '../types';
 
 class WidgetFactoryService {
@@ -91,4 +97,10 @@ widgetFactory.registerComponent('todo', TodoWidget);
 widgetFactory.registerComponent('sticky-note', StickyNoteWidget);
 widgetFactory.registerComponent('pomodoro', PomodoroWidget);
 widgetFactory.registerComponent('kanban', KanbanWidget);
-widgetFactory.registerComponent('custom-image', CustomImageWidget);
+widgetFactory.registerComponent('custom-wallpaper', CustomImageWidget);
+widgetFactory.registerComponent('personal-image', PersonalImageWidget);
+widgetFactory.registerComponent('habit-tracker', HabitWidget);
+widgetFactory.registerComponent('priority-matrix', PriorityMatrixWidget);
+widgetFactory.registerComponent('youtube-player', YouTubePlayerWidget);
+widgetFactory.registerComponent('calendar', CalendarWidget);
+widgetFactory.registerComponent('voice-text-notes', VoiceTextNotesWidget);

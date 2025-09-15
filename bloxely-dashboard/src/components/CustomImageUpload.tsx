@@ -67,12 +67,12 @@ const CustomImageUpload: React.FC<CustomImageUploadProps> = ({ onClose }) => {
     <>
       {/* Backdrop */}
       <div
-        className="custom-image-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm"
+        className="custom-wallpaper-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="custom-image-modal fixed inset-0 flex items-center justify-center p-4">
+      <div className="custom-wallpaper-modal fixed inset-0 flex items-center justify-center p-4">
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-md w-full p-6">
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
             {preview ? 'Change Custom Image' : 'Custom Background Image'}

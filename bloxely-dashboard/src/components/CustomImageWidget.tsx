@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useWallpaper } from '../context/WallpaperContext';
-import type { BaseWidgetProps } from '../types/widget';
+import type { BaseWidgetProps } from '../types';
 
 interface CustomImageWidgetProps extends BaseWidgetProps {
   onClose?: () => void;
@@ -64,75 +64,116 @@ const CustomImageWidget: React.FC<CustomImageWidgetProps> = ({ widget, onUpdate,
     setPreview(null); // Clear preview
   };
 
+  const handleAreaClick = (e: React.MouseEvent) => {
+    // Only trigger file input if there's no image or preview
+    if (!customImageUrl && !preview) {
+      fileInputRef.current?.click();
+    }
+  };
+
   return (
-    <div className="custom-image-widget h-full w-full">
-      {/* Single Clean Upload Area that handles all states */}
+    <div className="custom-wallpaper-widget h-full w-full flex flex-col p-3 md:p-4">
+      {/* Upload Area */}
       <div
-        className={`w-full h-full border-2 border-dashed rounded-xl text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center shadow-sm hover:shadow-md ${
+        className={`flex-1 border-2 border-dashed rounded-xl transition-all duration-200 flex flex-col items-center justify-center shadow-sm hover:shadow-md min-h-[200px] relative ${
           isDragging
             ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md'
             : customImageUrl
             ? 'border-green-300 bg-green-50 dark:bg-green-900/10'
             : preview
             ? 'border-blue-300 bg-blue-50 dark:bg-blue-900/10'
-            : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/70'
+            : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/70 cursor-pointer'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
+        onClick={handleAreaClick}
       >
-        {/* Icon */}
-        <div className="icon-container mb-4">
+        {/* Remove button for uploaded images */}
+        {(customImageUrl || preview) && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemove();
+            }}
+            className="absolute top-2 right-2 z-10 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110"
+            title="Remove image"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+
+        {/* Change button for uploaded images */}
+        {customImageUrl && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              fileInputRef.current?.click();
+            }}
+            className="absolute top-2 left-2 z-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110"
+            title="Change image"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </button>
+        )}
+
+        {/* Image Preview or Icon */}
+        <div className="w-full h-full flex flex-col items-center justify-center p-4">
           {customImageUrl ? (
-            <div className="overflow-hidden border-2 border-green-500 shadow-sm">
+            <div className="w-full h-full max-h-[150px] md:max-h-[200px] flex items-center justify-center">
               <img
                 src={customImageUrl}
                 alt="Current custom background"
-                className="w-full h-full object-cover"
+                className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
               />
             </div>
           ) : preview ? (
-            <div className="overflow-hidden border-2 border-blue-500 shadow-sm">
+            <div className="w-full h-full max-h-[150px] md:max-h-[200px] flex items-center justify-center">
               <img
                 src={preview}
                 alt="Preview"
-                className="w-full h-full object-cover"
+                className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
               />
             </div>
           ) : (
-            <div className="border-2 border-dashed border-slate-400 dark:border-slate-500 flex items-center justify-center bg-white dark:bg-slate-700 shadow-sm rounded-full">
-              <span>📷</span>
+            <div className="text-center space-y-3">
+              <div className="w-12 h-12 md:w-16 md:h-16 border-2 border-dashed border-slate-400 dark:border-slate-500 flex items-center justify-center bg-white dark:bg-slate-700 shadow-sm rounded-full mx-auto">
+                <span className="text-2xl md:text-3xl">📷</span>
+              </div>
             </div>
           )}
-        </div>
 
-        {/* Text Content */}
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-            {customImageUrl ? 'Custom Image Active' : preview ? 'Preview Ready' : 'Upload Custom Image'}
-          </h3>
+          {/* Text Content */}
+          <div className="text-center space-y-1 mt-3 md:mt-4">
+            <h3 className="text-sm md:text-base font-semibold text-slate-800 dark:text-slate-200">
+              {customImageUrl ? 'Custom Image Active' : preview ? 'Preview Ready' : 'Upload Custom Image'}
+            </h3>
 
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            {customImageUrl
-              ? 'Click to change image'
-              : preview
-              ? 'Click to apply this image'
-              : 'Drag and drop or click to browse'
-            }
-          </p>
-
-          {isDragging && (
-            <p className="text-sm font-medium text-blue-600 dark:text-blue-400 animate-pulse">
-              Drop to upload
+            <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400">
+              {customImageUrl
+                ? 'Use buttons above to change or remove'
+                : preview
+                ? 'Click apply button below to set as wallpaper'
+                : 'Drag and drop or click to browse'
+              }
             </p>
-          )}
 
-          {!customImageUrl && !preview && !isDragging && (
-            <p className="text-xs text-slate-500 dark:text-slate-500">
-              Supports JPG, PNG, GIF
-            </p>
-          )}
+            {isDragging && (
+              <p className="text-xs md:text-sm font-medium text-blue-600 dark:text-blue-400 animate-pulse">
+                Drop to upload
+              </p>
+            )}
+
+            {!customImageUrl && !preview && !isDragging && (
+              <p className="text-xs text-slate-500 dark:text-slate-500">
+                Supports JPG, PNG, GIF
+              </p>
+            )}
+          </div>
         </div>
 
         <input
@@ -145,11 +186,11 @@ const CustomImageWidget: React.FC<CustomImageWidgetProps> = ({ widget, onUpdate,
       </div>
 
       {/* Actions */}
-      <div className="action-buttons flex gap-3 mt-4 w-full">
+      <div className="flex flex-col sm:flex-row gap-2 mt-3 md:mt-4">
         <button
           onClick={handleRemove}
           disabled={!customImageUrl && !preview}
-          className={`action-button flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md ${
+          className={`py-2 px-3 md:px-4 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md text-sm md:text-base ${
             customImageUrl || preview
               ? 'text-red-600 border border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20'
               : 'text-slate-400 border border-slate-300 dark:border-slate-600 cursor-not-allowed opacity-50'
@@ -160,7 +201,7 @@ const CustomImageWidget: React.FC<CustomImageWidgetProps> = ({ widget, onUpdate,
         {preview && (
           <button
             onClick={handleApply}
-            className="action-button flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md font-medium"
+            className="py-2 px-3 md:px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm md:text-base flex-1"
           >
             Apply Image
           </button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDashboard } from '../context/DashboardContext';
 import { useDashboardSelectors } from '../hooks/useDashboardSelectors';
 import { useDashboardActions } from '../hooks/useDashboardActions';
@@ -9,13 +9,16 @@ import PersistenceStatus from './PersistenceStatus';
 import ThemeToggle from './ThemeToggle';
 import WallpaperSelector from './WallpaperSelector';
 import WidgetDropdown from './WidgetDropdown';
+import FloatingControlPanel from './FloatingControlPanel';
 import type { WidgetType } from '../types/dashboard';
 
 const Dashboard: React.FC = () => {
   const { isLoading, persistenceEnabled } = useDashboard();
   const { hasWidgets, getWidgetCount, widgets } = useDashboardSelectors();
   const { addWidget } = useDashboardActions();
-  
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const appContainerRef = useRef<HTMLDivElement>(null);
+
   // Save state before page unload
   useBeforeUnload();
 
@@ -39,7 +42,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <>
+    <div ref={appContainerRef} className="app-container min-h-screen w-full relative overflow-hidden">
       <header className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700/50 p-4 shadow-lg transition-colors duration-300 relative z-[100]">
         <div className="w-full px-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Bloxely</h1>
@@ -50,8 +53,11 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </header>
-      
-      <main className="w-full p-0 m-0 bg-transparent min-h-screen relative z-[1]">
+
+      <main
+        ref={canvasRef}
+        className="canvas-container w-full p-0 m-0 bg-transparent min-h-screen relative z-[1]"
+      >
         {!hasWidgets ? (
           <div className="text-center py-20 w-full">
             <div className="mb-6">
@@ -61,17 +67,22 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         ) : (
-          <FreeLayoutManager>
-            {Object.values(widgets).map((widget) => (
-              <WidgetRenderer key={widget.id} widget={widget} />
-            ))}
-          </FreeLayoutManager>
+          <div className="canvas-content">
+            <FreeLayoutManager>
+              {Object.values(widgets).map((widget) => (
+                <WidgetRenderer key={widget.id} widget={widget} />
+              ))}
+            </FreeLayoutManager>
+          </div>
         )}
-        
-        {/* Persistence status indicator */}
-        <PersistenceStatus />
       </main>
-    </>
+
+      {/* Persistence status indicator */}
+      <PersistenceStatus />
+
+      {/* Floating control panel */}
+      <FloatingControlPanel appContainerRef={canvasRef} />
+    </div>
   );
 };
 

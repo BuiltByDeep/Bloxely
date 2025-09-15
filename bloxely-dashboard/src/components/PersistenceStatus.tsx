@@ -57,7 +57,7 @@ const PersistenceStatus: React.FC = () => {
 
   if (!persistenceEnabled) {
     return (
-      <div className="fixed bottom-4 right-4 bg-amber-100 dark:bg-amber-900/90 backdrop-blur-sm border border-amber-300 dark:border-amber-700/50 text-amber-800 dark:text-amber-200 px-4 py-3 rounded-xl text-sm shadow-xl">
+      <div className="fixed bottom-4 left-4 bg-amber-100 dark:bg-amber-900/90 backdrop-blur-sm border border-amber-300 dark:border-amber-700/50 text-amber-800 dark:text-amber-200 px-4 py-3 rounded-xl text-sm shadow-xl">
         <div className="flex items-center gap-2">
           <span>⚠️</span>
           <span>Auto-save disabled</span>
@@ -67,7 +67,7 @@ const PersistenceStatus: React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 left-4 z-50 persistence-status-container">
       {/* Status indicator */}
       {showStatus && (
         <div className="bg-emerald-100 dark:bg-emerald-900/90 backdrop-blur-sm border border-emerald-300 dark:border-emerald-700/50 text-emerald-800 dark:text-emerald-200 px-4 py-3 rounded-xl text-sm shadow-xl mb-2 animate-fade-in">
@@ -80,15 +80,28 @@ const PersistenceStatus: React.FC = () => {
 
       {/* Persistence info button */}
       <div className="group relative">
-        <button
-          onClick={handleForceSave}
-          className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-300 p-3 rounded-full shadow-xl hover:bg-slate-50 dark:hover:bg-slate-700/90 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200"
-          title="Force save dashboard"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Storage size indicator */}
+          <div className="bg-slate-100 dark:bg-slate-700/50 px-2 py-1 rounded-lg text-xs text-slate-600 dark:text-slate-300 font-medium">
+            {storageInfo.sizeKB}KB
+          </div>
+
+          {/* Save button */}
+          <button
+            onClick={handleForceSave}
+            className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-300 p-3 rounded-full shadow-xl hover:bg-slate-50 dark:hover:bg-slate-700/90 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200"
+            title="Force save dashboard"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </button>
+
+          {/* Last saved indicator */}
+          <div className="bg-emerald-100 dark:bg-emerald-900/50 px-2 py-1 rounded-lg text-xs text-emerald-700 dark:text-emerald-300 font-medium">
+            {formatLastSaved(storageInfo.timestamp)}
+          </div>
+        </div>
 
         {/* Tooltip with storage info */}
         <div className="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">

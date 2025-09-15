@@ -40,6 +40,7 @@ const StickyNoteWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
 
   // Handle color change
   const handleColorChange = (newColor: StickyNoteColor) => {
+    console.log('Color changed to:', newColor.name);
     onUpdate({
       ...stickyData,
       color: newColor,
@@ -68,15 +69,16 @@ const StickyNoteWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
       <button
         onClick={(e) => {
           e.stopPropagation();
+          console.log('Color picker button clicked, current state:', isColorPickerOpen);
           setIsColorPickerOpen(!isColorPickerOpen);
         }}
         onMouseDown={(e) => e.stopPropagation()}
-        className="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-black/20 hover:border-black/40 transition-colors z-10 clickable"
-        style={{ background: currentColor.gradient }}
+        className="absolute bottom-2 left-2 w-8 h-8 rounded-full border-2 border-white/50 hover:border-white/80 transition-all z-10 clickable hover:scale-110 shadow-lg"
+        style={{ background: 'rgba(255, 255, 255, 0.9)' }}
         title="Change color"
       >
         <div className="w-full h-full rounded-full flex items-center justify-center">
-          <svg className="w-3 h-3 text-black/60" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="w-4 h-4 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h12v11H4V4z" clipRule="evenodd" />
           </svg>
         </div>
@@ -84,7 +86,7 @@ const StickyNoteWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
 
       {/* Color picker dropdown */}
       {isColorPickerOpen && (
-        <div className="absolute top-10 right-2 bg-white rounded-lg shadow-lg p-2 z-20 border border-gray-200">
+        <div className="absolute bottom-10 left-2 bg-white rounded-lg shadow-lg p-2 z-50 border border-gray-200">
           <div className="grid grid-cols-4 gap-2">
             {COLOR_PALETTE.map((color, index) => (
               <button
@@ -95,7 +97,7 @@ const StickyNoteWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
                 }}
                 onMouseDown={(e) => e.stopPropagation()}
                 className={`w-8 h-8 rounded-full border-2 hover:scale-110 transition-transform ${
-                  color === currentColor ? 'border-gray-800' : 'border-gray-300'
+                  color.name === currentColor.name ? 'border-gray-800' : 'border-gray-300'
                 } clickable`}
                 style={{ background: color.gradient }}
                 title={color.name}
@@ -115,9 +117,8 @@ const StickyNoteWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
           handleFocus();
         }}
         onBlur={handleBlur}
-        onMouseDown={(e) => e.stopPropagation()}
         placeholder="Type your note here..."
-        className={`w-full h-full resize-none border-none outline-none bg-transparent p-4 pr-10 text-gray-800 placeholder-gray-600 font-medium leading-relaxed ${
+        className={`w-full h-full resize-none border-none outline-none bg-transparent p-4 pl-12 pr-4 text-gray-800 placeholder-gray-600 font-medium leading-relaxed relative z-10 ${
           isFocused ? 'ring-2 ring-black/20 ring-inset' : ''
         }`}
         style={{
@@ -127,27 +128,7 @@ const StickyNoteWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
         }}
       />
 
-      {/* Subtle paper texture overlay */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-10"
-        style={{
-          backgroundImage: `
-            radial-gradient(circle at 1px 1px, rgba(0,0,0,0.15) 1px, transparent 0),
-            linear-gradient(45deg, transparent 40%, rgba(0,0,0,0.05) 50%, transparent 60%)
-          `,
-          backgroundSize: '20px 20px, 40px 40px',
-        }}
-      />
-
-      {/* Corner fold effect */}
-      <div 
-        className="absolute bottom-0 right-0 w-8 h-8 pointer-events-none opacity-40"
-        style={{
-          background: 'rgba(255, 255, 255, 0.4)',
-          clipPath: 'polygon(100% 0, 0 100%, 100% 100%)',
-        }}
-      />
-    </div>
+      </div>
   );
 };
 
