@@ -12,6 +12,16 @@ const WidgetWrapper: React.FC<WidgetWrapperProps> = ({ widget, children }) => {
 
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Clean up widget-specific localStorage entries
+    try {
+      localStorage.removeItem(`widget-position-${widget.id}`);
+      localStorage.removeItem(`widget-size-${widget.id}`);
+      console.log('Cleaned up localStorage for widget:', widget.id);
+    } catch (error) {
+      console.warn('Failed to clean up localStorage for widget:', widget.id, error);
+    }
+    
     removeWidget(widget.id);
   };
 

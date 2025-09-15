@@ -37,6 +37,14 @@ const PersistenceStatus: React.FC = () => {
 
   const handleForceSave = () => {
     const success = forceSave();
+    
+    // Also save all widget positions and sizes
+    const saveWidgetStates = (window as any).saveAllWidgetStates;
+    if (typeof saveWidgetStates === 'function') {
+      const result = saveWidgetStates();
+      console.log('Widget states saved:', result);
+    }
+    
     if (success) {
       setShowStatus(true);
       setTimeout(() => setShowStatus(false), 2000);

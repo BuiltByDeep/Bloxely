@@ -11,6 +11,21 @@ interface WidgetSize {
 }
 
 /**
+ * Get the current zoom level from the canvas container
+ */
+const getCanvasZoomLevel = (): number => {
+  const canvasContainer = document.querySelector('.canvas-container') as HTMLElement;
+  if (!canvasContainer) return 1;
+  
+  const transform = window.getComputedStyle(canvasContainer).transform;
+  if (transform && transform !== 'none') {
+    const matrix = new DOMMatrix(transform);
+    return matrix.a; // scale factor
+  }
+  return 1;
+};
+
+/**
  * Free layout manager that displays widgets with unrestricted movement
  * similar to Miro, using refs for positions to prevent React re-render issues.
  */
@@ -43,7 +58,24 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
           return existingSize;
         }
         
-        // Default size
+        // Try to load size from localStorage first
+        try {
+          const storageKey = `widget-size-${widgetId}`;
+          const savedSize = localStorage.getItem(storageKey);
+          if (savedSize) {
+            const sizeData = JSON.parse(savedSize);
+            console.log('Restored widget size from localStorage:', widgetId, sizeData.width, sizeData.height);
+            return {
+              id: widgetId,
+              width: sizeData.width,
+              height: sizeData.height
+            };
+          }
+        } catch (error) {
+          console.warn('Failed to load saved size for widget:', widgetId, error);
+        }
+        
+        // Default size if no saved size found
         return {
           id: widgetId,
           width: 300,
@@ -63,16 +95,34 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
           return;
         }
         
-        // Default position - arrange in a more organic, free-form layout
-        const angle = (idx / childArray.length) * 2 * Math.PI;
-        const radius = 200 + (idx % 3) * 100;
-        const centerX = window.innerWidth / 2 - 150; // Center roughly, accounting for widget width
-        const centerY = window.innerHeight / 2 - 150; // Center roughly, accounting for widget height
+        // Try to load position from localStorage first
+        let position = null;
+        try {
+          const storageKey = `widget-position-${widgetId}`;
+          const savedPosition = localStorage.getItem(storageKey);
+          if (savedPosition) {
+            const positionData = JSON.parse(savedPosition);
+            position = { x: positionData.x, y: positionData.y };
+            console.log('Restored widget position from localStorage:', widgetId, position);
+          }
+        } catch (error) {
+          console.warn('Failed to load saved position for widget:', widgetId, error);
+        }
         
-        widgetPositionsRef.current[widgetId] = {
-          x: centerX + Math.cos(angle) * radius,
-          y: centerY + Math.sin(angle) * radius,
-        };
+        // If no saved position, use default position - arrange in a more organic, free-form layout
+        if (!position) {
+          const angle = (idx / childArray.length) * 2 * Math.PI;
+          const radius = 200 + (idx % 3) * 100;
+          const centerX = window.innerWidth / 2 - 150; // Center roughly, accounting for widget width
+          const centerY = window.innerHeight / 2 - 150; // Center roughly, accounting for widget height
+          
+          position = {
+            x: centerX + Math.cos(angle) * radius,
+            y: centerY + Math.sin(angle) * radius,
+          };
+        }
+        
+        widgetPositionsRef.current[widgetId] = position;
       });
       
       // Set initial positions directly on DOM elements after a short delay
@@ -176,22 +226,18 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
     const deltaY = e.clientY - startY;
 
     // Get the current zoom level from the canvas container
-    const canvasContainer = element.closest('.canvas-container') as HTMLElement;
-    let zoomLevel = 1;
-    if (canvasContainer) {
-      const transform = window.getComputedStyle(canvasContainer).transform;
-      if (transform && transform !== 'none') {
-        const matrix = new DOMMatrix(transform);
-        zoomLevel = matrix.a; // scale factor
-      }
-    }
+    const zoomLevel = getCanvasZoomLevel();
 
     // Adjust delta for zoom level to make resizing feel consistent
-    const adjustedDeltaX = deltaX / zoomLevel;
-    const adjustedDeltaY = deltaY / zoomLevel;
+    // Use a more robust zoom adjustment
+    const effectiveZoomLevel = zoomLevel > 0 ? zoomLevel : 1;
+    const adjustedDeltaX = deltaX / effectiveZoomLevel;
+    const adjustedDeltaY = deltaY / effectiveZoomLevel;
 
-    const newWidth = Math.max(200, startWidth + adjustedDeltaX);
-    const newHeight = Math.max(200, startHeight + adjustedDeltaY);
+    // Set minimum size based on zoom level
+    const minSize = effectiveZoomLevel < 1 ? 150 : 200;
+    const newWidth = Math.max(minSize, startWidth + adjustedDeltaX);
+    const newHeight = Math.max(minSize, startHeight + adjustedDeltaY);
 
     // Update size directly on DOM element for immediate feedback
     element.style.width = `${newWidth}px`;
@@ -215,34 +261,30 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
     const deltaY = e.clientY - startY;
 
     // Get the current zoom level from the canvas container
-    const canvasContainer = element.closest('.canvas-container') as HTMLElement;
-    let zoomLevel = 1;
-    if (canvasContainer) {
-      const transform = window.getComputedStyle(canvasContainer).transform;
-      if (transform && transform !== 'none') {
-        const matrix = new DOMMatrix(transform);
-        zoomLevel = matrix.a; // scale factor
-      }
-    }
+    const zoomLevel = getCanvasZoomLevel();
+    const canvasContainer = document.querySelector('.canvas-container') as HTMLElement;
 
     // Adjust delta for zoom level to make movement feel natural
-    const adjustedDeltaX = deltaX / zoomLevel;
-    const adjustedDeltaY = deltaY / zoomLevel;
+    // Use a more robust zoom adjustment
+    const effectiveZoomLevel = zoomLevel > 0 ? zoomLevel : 1;
+    const adjustedDeltaX = deltaX / effectiveZoomLevel;
+    const adjustedDeltaY = deltaY / effectiveZoomLevel;
 
     let newLeft = startLeft + adjustedDeltaX;
     let newTop = startTop + adjustedDeltaY;
 
-    // Use viewport dimensions for boundaries to allow movement across entire screen
-    const viewportWidth = window.innerWidth / zoomLevel;
-    const viewportHeight = window.innerHeight / zoomLevel;
-    const elementRect = element.getBoundingClientRect();
-    const elementWidth = elementRect.width / zoomLevel;
-    const elementHeight = elementRect.height / zoomLevel;
+    // Get viewport dimensions in logical coordinates (accounting for zoom)
+    const canvasRect = canvasContainer?.getBoundingClientRect() || { width: window.innerWidth, height: window.innerHeight };
+    const viewportWidth = Math.max(canvasRect.width / effectiveZoomLevel, window.innerWidth);
+    const viewportHeight = Math.max(canvasRect.height / effectiveZoomLevel, window.innerHeight);
+    
+    // Get widget dimensions in logical coordinates
+    const widgetSize = widgetSizes.find(size => size.id === id);
+    const elementWidth = widgetSize?.width || 300;
+    const elementHeight = widgetSize?.height || 300;
 
-    // Allow movement across entire viewport with more padding at lower zoom levels
-    const basePadding = 50;
-    const zoomPaddingMultiplier = 100 / zoomLevel; // More padding at lower zoom levels
-    const padding = basePadding * zoomPaddingMultiplier;
+    // Allow movement across entire viewport with generous padding for zoomed views
+    const padding = effectiveZoomLevel < 1 ? 200 : 50;
     const minLeft = -padding;
     const maxLeft = viewportWidth - elementWidth + padding;
     const minTop = -padding;
@@ -257,7 +299,7 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
 
     // Also update our ref to keep track of the position
     widgetPositionsRef.current[id] = { x: newLeft, y: newTop };
-  }, []);
+  }, [widgetSizes]);
 
   const handleResizeEnd = useCallback(() => {
     if (!resizingWidget.current) return;
@@ -286,6 +328,20 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
       )
     );
     
+    // Persist widget size to localStorage
+    try {
+      const storageKey = `widget-size-${id}`;
+      const sizeData = {
+        width: finalWidth,
+        height: finalHeight,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(storageKey, JSON.stringify(sizeData));
+      console.log('Widget size saved to localStorage:', id, finalWidth, finalHeight);
+    } catch (error) {
+      console.warn('Failed to save widget size:', error);
+    }
+    
     // Add smooth transition back to normal state
     element.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
     
@@ -310,6 +366,20 @@ const FreeLayoutManager: React.FC<FreeLayoutManagerProps> = ({ children }) => {
     
     // Update our ref with the final position
     widgetPositionsRef.current[id] = { x: finalX, y: finalY };
+    
+    // Persist widget position to localStorage immediately for better reliability
+    try {
+      const storageKey = `widget-position-${id}`;
+      const positionData = {
+        x: finalX,
+        y: finalY,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(storageKey, JSON.stringify(positionData));
+      console.log('Widget position saved to localStorage:', id, finalX, finalY);
+    } catch (error) {
+      console.warn('Failed to save widget position:', error);
+    }
     
     draggingWidget.current = null;
     

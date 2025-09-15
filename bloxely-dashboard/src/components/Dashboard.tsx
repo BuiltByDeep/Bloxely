@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDashboard } from '../context/DashboardContext';
 import { useDashboardSelectors } from '../hooks/useDashboardSelectors';
 import { useDashboardActions } from '../hooks/useDashboardActions';
@@ -21,6 +21,42 @@ const Dashboard: React.FC = () => {
 
   // Save state before page unload
   useBeforeUnload();
+  
+  // Expose global function for updating widget positions from GridLayoutManager
+  useEffect(() => {
+    (window as any).updateWidgetLayout = (widgetId: string, x: number, y: number) => {
+      // This function will update the dashboard state with new positions
+      // For now, we'll trigger a force save to ensure position is persisted
+      // In future, we could update the actual layout state here
+      console.log('Updating widget position:', widgetId, x, y);
+    };
+    
+    // Expose function to manually save all widget positions and states
+    (window as any).saveAllWidgetStates = () => {
+      // Save all current widget positions from localStorage
+      console.log('Manually saving all widget states...');
+      
+      // Get all widget position keys
+      const positionKeys = [];
+      const sizeKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key?.startsWith('widget-position-')) {
+          positionKeys.push(key);
+        } else if (key?.startsWith('widget-size-')) {
+          sizeKeys.push(key);
+        }
+      }
+      
+      console.log(`Found ${positionKeys.length} widget positions and ${sizeKeys.length} widget sizes to save`);
+      return { positions: positionKeys.length, sizes: sizeKeys.length };
+    };
+    
+    return () => {
+      delete (window as any).updateWidgetLayout;
+      delete (window as any).saveAllWidgetStates;
+    };
+  }, []);
 
   const handleAddWidget = (widgetType: WidgetType) => {
     addWidget(widgetType);
