@@ -42,7 +42,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div ref={appContainerRef} className="app-container min-h-screen w-full relative overflow-hidden">
+    <div ref={appContainerRef} className="app-container min-h-screen w-full relative">
       <header className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700/50 p-4 shadow-lg transition-colors duration-300 relative z-[100]">
         <div className="w-full px-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Bloxely</h1>
@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
 
       <main
         ref={canvasRef}
-        className="canvas-container w-full p-0 m-0 bg-transparent min-h-screen relative z-[1]"
+        className="canvas-container w-full p-0 m-0 bg-white min-h-screen relative z-[1]"
       >
         {!hasWidgets ? (
           <div className="text-center py-20 w-full">

@@ -37,27 +37,25 @@ const FloatingControlPanel: React.FC<FloatingControlPanelProps> = ({ appContaine
   }, [isFullscreen]);
 
   useEffect(() => {
-    const canvasContainer = appContainerRef.current;
+    const appContainer = appContainerRef.current;
+    if (!appContainer) return;
+
+    // Find the canvas container (main element) within the app container
+    const canvasContainer = appContainer.querySelector('.canvas-container') as HTMLElement;
     if (!canvasContainer) return;
 
-    // Apply zoom transform to canvas content
+    // Apply zoom transform only to canvas content
     const scaleFactor = zoomLevel / 100;
 
     canvasContainer.style.transform = `scale(${scaleFactor})`;
-    canvasContainer.style.transformOrigin = 'center center';
+    canvasContainer.style.transformOrigin = 'center top';
     canvasContainer.style.transition = 'transform 0.3s ease';
-
-    // Adjust container dimensions for proper scaling
-    canvasContainer.style.width = `${100 / scaleFactor}%`;
-    canvasContainer.style.height = `${100 / scaleFactor}%`;
 
     return () => {
       // Cleanup styles
       canvasContainer.style.transform = '';
       canvasContainer.style.transformOrigin = '';
       canvasContainer.style.transition = '';
-      canvasContainer.style.width = '';
-      canvasContainer.style.height = '';
     };
   }, [zoomLevel, appContainerRef]);
 
