@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import type { ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo } from 'react';
+import type { ReactNode } from 'react';
 import type { WidgetData } from '../../types/dashboard';
 
 interface Props {

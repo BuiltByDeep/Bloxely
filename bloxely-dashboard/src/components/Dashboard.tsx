@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
   const { hasWidgets, widgets } = useDashboardSelectors();
   const { addWidget } = useDashboardActions();
   const canvasRef = useRef<HTMLDivElement>(null);
-  const appContainerRef = useRef<HTMLDivElement>(null);
+  const appContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Save state before page unload
   useBeforeUnload();
