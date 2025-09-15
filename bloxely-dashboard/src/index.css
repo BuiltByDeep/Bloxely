@@ -107,7 +107,16 @@ body {
   max-width: 100vw;
   position: relative;
   overflow-x: hidden;
+}
+
+/* Light theme app container */
+:not(.dark) .app-container {
   background-color: white;
+}
+
+/* Dark theme app container */
+.dark .app-container {
+  background-color: #0f172a;
 }
 
 /* Dots Pattern (Default) */
@@ -244,7 +253,6 @@ body {
 
 /* Canvas container specific styles */
 .canvas-container {
-  background-color: white !important;
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
@@ -252,6 +260,16 @@ body {
   margin-top: 0 !important;
   padding-top: 0 !important;
   min-height: calc(100vh - 80px); /* Account for header height */
+}
+
+/* Light theme canvas */
+:not(.dark) .canvas-container {
+  background-color: white !important;
+}
+
+/* Dark theme canvas */
+.dark .canvas-container {
+  background-color: #0f172a !important;
 }
 
 /* Ensure canvas fills viewport when scaled */

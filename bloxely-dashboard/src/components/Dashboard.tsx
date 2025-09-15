@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
 
       <main
         ref={canvasRef}
-        className="canvas-container w-full p-0 m-0 bg-white min-h-screen relative z-[1]"
+        className="canvas-container w-full p-0 m-0 bg-white dark:bg-slate-900 min-h-screen relative z-[1] transition-colors duration-300"
       >
         {!hasWidgets ? (
           <div className="text-center py-20 w-full">

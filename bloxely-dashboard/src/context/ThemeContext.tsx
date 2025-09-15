@@ -24,11 +24,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       return savedTheme;
     }
     
-    // Check system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    
+    // Always default to light mode instead of system preference
     return 'light';
   });
 
