@@ -39,23 +39,20 @@ export function WallpaperProvider({ children }: WallpaperProviderProps) {
     // Add current wallpaper class
     document.body.classList.add(`wallpaper-${wallpaper}`);
 
-    // Apply custom image to main content area if wallpaper is custom and image exists
-    const mainElement = document.querySelector('main');
-    if (wallpaper === 'custom' && customImageUrl && mainElement) {
-      mainElement.style.backgroundImage = `url(${customImageUrl})`;
-      mainElement.style.backgroundSize = 'cover';
-      mainElement.style.backgroundPosition = 'center';
-      mainElement.style.backgroundRepeat = 'no-repeat';
-      mainElement.style.backgroundAttachment = 'fixed';
-      mainElement.style.minHeight = 'calc(100vh - 80px)'; // Account for header height
-    } else if (mainElement) {
+    // Apply custom image to body if wallpaper is custom and image exists
+    if (wallpaper === 'custom' && customImageUrl) {
+      document.body.style.backgroundImage = `url(${customImageUrl})`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundAttachment = 'fixed';
+    } else {
       // Clear custom background styles for non-custom wallpapers
-      mainElement.style.backgroundImage = '';
-      mainElement.style.backgroundSize = '';
-      mainElement.style.backgroundPosition = '';
-      mainElement.style.backgroundRepeat = '';
-      mainElement.style.backgroundAttachment = '';
-      mainElement.style.minHeight = '';
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundSize = '';
+      document.body.style.backgroundPosition = '';
+      document.body.style.backgroundRepeat = '';
+      document.body.style.backgroundAttachment = '';
     }
 
     // Save to localStorage

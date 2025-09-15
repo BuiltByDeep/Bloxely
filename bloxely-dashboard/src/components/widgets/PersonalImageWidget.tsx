@@ -9,6 +9,8 @@ const PersonalImageWidget: React.FC<PersonalImageWidgetProps> = ({ widget, onUpd
   const data = widget.content;
 
   const handleImageUpload = useCallback((file: File) => {
+    console.log('File selected:', file.name, file.type, file.size);
+    
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file');
       return;
@@ -22,7 +24,12 @@ const PersonalImageWidget: React.FC<PersonalImageWidgetProps> = ({ widget, onUpd
     const reader = new FileReader();
     reader.onload = (e) => {
       const imageUrl = e.target?.result as string;
+      console.log('Image loaded successfully, calling onUpdate');
       onUpdate({ imageUrl });
+    };
+    reader.onerror = (e) => {
+      console.error('Error reading file:', e);
+      alert('Error reading the image file');
     };
     reader.readAsDataURL(file);
   }, [onUpdate]);
@@ -60,7 +67,12 @@ const PersonalImageWidget: React.FC<PersonalImageWidgetProps> = ({ widget, onUpd
 
   const handleClick = useCallback(() => {
     // Always trigger file input to allow image replacement
-    fileInputRef.current?.click();
+    console.log('Image widget clicked, triggering file input');
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    } else {
+      console.error('File input ref is null');
+    }
   }, []);
 
   return (

@@ -14,7 +14,7 @@ function App() {
         <WallpaperProvider>
           <NotificationProvider>
             <DashboardProvider>
-              <div className="min-h-screen text-slate-900 dark:text-white transition-colors duration-300" style={{ background: 'transparent' }}>
+              <div className="min-h-screen text-slate-900 dark:text-white transition-colors duration-300">
                 <Dashboard />
                 <NotificationContainer />
               </div>

@@ -40,10 +40,15 @@ function dashboardReducer(state: DashboardState, action: DashboardAction): Dashb
 
       // Create layout item with default size based on widget type
       const defaultSize = getDefaultSize(widgetType);
+      
+      // Calculate center position if no position is specified
+      const centerX = position?.x ?? Math.max(0, Math.floor((state.settings.gridCols - defaultSize.w) / 2));
+      const centerY = position?.y ?? Math.max(0, Math.floor((getMaxYPosition(state.layout) + 1)));
+      
       const newLayoutItem: GridLayout = {
         i: widgetId,
-        x: position?.x ?? 0,
-        y: position?.y ?? 0,
+        x: centerX,
+        y: centerY,
         w: defaultSize.w,
         h: defaultSize.h,
         minW: defaultSize.minW,
@@ -146,6 +151,12 @@ function getDefaultTitle(widgetType: string): string {
 
 function getDefaultSize(widgetType: string) {
   return widgetFactory.getDefaultSize(widgetType as any);
+}
+
+// Helper function to find the maximum Y position in the current layout
+function getMaxYPosition(layout: GridLayout[]): number {
+  if (layout.length === 0) return 0;
+  return Math.max(...layout.map(item => item.y + item.h));
 }
 
 // Context
