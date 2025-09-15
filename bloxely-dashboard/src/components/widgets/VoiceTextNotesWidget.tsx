@@ -1,6 +1,48 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import type { BaseWidgetProps } from '../../types/widget';
 
+// Speech Recognition types
+declare global {
+  interface Window {
+    SpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition;
+  }
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  start(): void;
+  stop(): void;
+}
+
 interface Note {
   id: string;
   type: 'text' | 'voice';
@@ -11,13 +53,7 @@ interface Note {
   important: boolean;
 }
 
-interface VoiceTextNotesWidgetProps extends BaseWidgetProps {
-  widget: BaseWidgetProps['widget'] & {
-    content: {
-      notes?: Note[];
-    };
-  };
-}
+interface VoiceTextNotesWidgetProps extends BaseWidgetProps {}
 
 const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onUpdate }) => {
   const [notes, setNotes] = useState<Note[]>(widget.content.notes || []);
@@ -32,18 +68,19 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const recognitionRef = useRef<any | null>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   // Initialize speech recognition
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = 'en-US';
+      if (recognitionRef.current) {
+        recognitionRef.current.continuous = true;
+        recognitionRef.current.interimResults = true;
+        recognitionRef.current.lang = 'en-US';
 
-      recognitionRef.current.onresult = (event: any) => {
+        recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         let interimTranscript = '';
         let finalTranscript = '';
 
@@ -57,11 +94,12 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
         }
 
         setTranscript(finalTranscript + interimTranscript);
-      };
+        };
 
-      recognitionRef.current.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
-      };
+        recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
+          console.error('Speech recognition error:', event.error);
+        };
+      }
     }
   }, []);
 

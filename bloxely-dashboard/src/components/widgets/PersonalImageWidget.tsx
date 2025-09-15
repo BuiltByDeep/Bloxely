@@ -1,13 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import type { BaseWidgetProps } from '../../types/widget';
 
-interface PersonalImageWidgetProps extends BaseWidgetProps {
-  widget: BaseWidgetProps['widget'] & {
-    content: {
-      imageUrl?: string;
-    };
-  };
-}
+interface PersonalImageWidgetProps extends BaseWidgetProps {}
 
 const PersonalImageWidget: React.FC<PersonalImageWidgetProps> = ({ widget, onUpdate }) => {
   const [isDragOver, setIsDragOver] = useState(false);

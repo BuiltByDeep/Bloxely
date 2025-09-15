@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import type { BaseWidgetProps } from '../../types/widget';
-import type { WidgetData } from '../../types/dashboard';
 import { generateDateRange, getTodayString } from './utils';
 
 interface Habit {
@@ -11,13 +10,7 @@ interface Habit {
   completions: Record<string, boolean>;
 }
 
-interface HabitWidgetProps extends BaseWidgetProps {
-  widget: WidgetData & {
-    content: {
-      habits?: Habit[];
-    };
-  };
-}
+interface HabitWidgetProps extends BaseWidgetProps {}
 
 const HabitWidget: React.FC<HabitWidgetProps> = ({ widget, onUpdate }) => {
   const [habits, setHabits] = useState<Habit[]>(widget.content?.habits || []);

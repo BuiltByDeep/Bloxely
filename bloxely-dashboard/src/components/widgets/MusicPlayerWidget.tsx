@@ -143,7 +143,7 @@ const MusicPlayerWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
             await setupSoundCloudStream();
             break;
           case 'local':
-            await setupLocalAudio(currentStation);
+            await setupLocalAudio();
             break;
           default:
             throw new Error(`Unsupported source: ${currentStation.source}`);
@@ -198,13 +198,13 @@ const MusicPlayerWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
   };
 
   // Setup local audio
-  const setupLocalAudio = async (station: MusicStation) => {
+  const setupLocalAudio = async () => {
     setStreamingMode('audio');
     
-    if (audioRef.current) {
+    if (audioRef.current && currentStation) {
       const audio = audioRef.current;
       audio.volume = volume;
-      audio.src = station.streamUrl;
+      audio.src = currentStation.streamUrl;
       
       const handleLoadStart = () => setIsLoading(true);
       const handleCanPlay = () => {
