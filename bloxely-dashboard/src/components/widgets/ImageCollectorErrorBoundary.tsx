@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import type { WidgetData } from '../../types/dashboard';
 
 interface Props {
@@ -34,13 +35,6 @@ class ImageCollectorErrorBoundary extends Component<Props, State> {
   };
 
   handleReset = () => {
-    // Reset widget to default state
-    const defaultContent = {
-      images: [],
-      maxImages: 20,
-      thumbnailSize: 150
-    };
-    
     console.log('Resetting Image Collector to default state');
     this.handleRetry();
   };

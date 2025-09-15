@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { BaseWidgetProps } from '../../types/widget';
 import type { ImageCollectorData, SavedImage } from '../../types/dashboard';
-import { 
-  processImageFile, 
-  validateImageDataUrl, 
-  compressImageIfNeeded,
+import {
+  processImageFile,
   calculateStorageUsage,
-  formatFileSize 
+  formatFileSize
 } from '../../utils/imageProcessing';
 
-const ImageCollectorWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate, onConfigUpdate }) => {
+const ImageCollectorWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
   const data = widget.content as ImageCollectorData;
   const [isDragOver, setIsDragOver] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -19,68 +17,6 @@ const ImageCollectorWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate, onC
   const [processingFile, setProcessingFile] = useState<string | null>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const imageRefs = useRef<Map<string, HTMLImageElement>>(new Map());
-
-  // Save image from data URL
-  const saveImageFromDataUrl = useCallback(async (dataUrl: string, fileName?: string) => {
-    setIsProcessing(true);
-    setError(null);
-    setProcessingProgress(0);
-    setProcessingFile(fileName || 'pasted image');
-    
-    try {
-      // Step 1: Validate the image data (20% progress)
-      setProcessingProgress(20);
-      const validation = validateImageDataUrl(dataUrl);
-      if (!validation.isValid) {
-        throw new Error(`Invalid image: ${validation.error}`);
-      }
-
-      // Step 2: Compress if needed (50% progress)
-      setProcessingProgress(50);
-      const compressedDataUrl = await compressImageIfNeeded(dataUrl);
-      
-      // Step 3: Process the image to get thumbnail and metadata (80% progress)
-      setProcessingProgress(80);
-      const processedImage = await processImageFile(
-        new File([dataUrl], fileName || 'pasted-image.png', { type: validation.mimeType! })
-      );
-      
-      const newImage: SavedImage = {
-        id: Date.now().toString(),
-        name: fileName || `Image_${new Date().toISOString().slice(0, 10)}_${Date.now()}`,
-        dataUrl: compressedDataUrl,
-        thumbnail: processedImage.thumbnail,
-        fileSize: validation.fileSize!,
-        mimeType: validation.mimeType!,
-        createdAt: new Date(),
-      };
-
-      let updatedImages = [newImage, ...data.images];
-      
-      // Step 4: Complete (100% progress)
-      setProcessingProgress(100);
-      
-      // Remove oldest images if exceeding maxImages limit
-      if (updatedImages.length > data.maxImages) {
-        updatedImages = updatedImages.slice(0, data.maxImages);
-      }
-
-      onUpdate({
-        ...data,
-        images: updatedImages,
-      });
-    } catch (error) {
-      console.error('Error processing image:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to process image';
-      setError(errorMessage);
-      setProcessingProgress(0);
-    } finally {
-      setIsProcessing(false);
-      setProcessingFile(null);
-      // Clear progress after a delay
-      setTimeout(() => setProcessingProgress(0), 1000);
-    }
-  }, [data, onUpdate]);
 
   // Save image from file
   const saveImageFromFile = useCallback(async (file: File) => {

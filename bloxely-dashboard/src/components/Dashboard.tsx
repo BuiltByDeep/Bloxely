@@ -14,7 +14,7 @@ import type { WidgetType } from '../types/dashboard';
 
 const Dashboard: React.FC = () => {
   const { isLoading, persistenceEnabled } = useDashboard();
-  const { hasWidgets, getWidgetCount, widgets } = useDashboardSelectors();
+  const { hasWidgets, widgets } = useDashboardSelectors();
   const { addWidget } = useDashboardActions();
   const canvasRef = useRef<HTMLDivElement>(null);
   const appContainerRef = useRef<HTMLDivElement>(null);
@@ -81,7 +81,7 @@ const Dashboard: React.FC = () => {
       <PersistenceStatus />
 
       {/* Floating control panel */}
-      <FloatingControlPanel appContainerRef={canvasRef} />
+      <FloatingControlPanel appContainerRef={appContainerRef} />
     </div>
   );
 };

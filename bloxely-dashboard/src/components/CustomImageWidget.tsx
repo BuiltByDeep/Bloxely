@@ -6,7 +6,7 @@ interface CustomImageWidgetProps extends BaseWidgetProps {
   onClose?: () => void;
 }
 
-const CustomImageWidget: React.FC<CustomImageWidgetProps> = ({ widget, onUpdate, onConfigUpdate, onClose }) => {
+const CustomImageWidget: React.FC<CustomImageWidgetProps> = () => {
   const { setCustomImage, setWallpaper, customImageUrl } = useWallpaper();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -64,7 +64,7 @@ const CustomImageWidget: React.FC<CustomImageWidgetProps> = ({ widget, onUpdate,
     setPreview(null); // Clear preview
   };
 
-  const handleAreaClick = (e: React.MouseEvent) => {
+  const handleAreaClick = () => {
     // Only trigger file input if there's no image or preview
     if (!customImageUrl && !preview) {
       fileInputRef.current?.click();

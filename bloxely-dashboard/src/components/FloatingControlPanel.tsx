@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface FloatingControlPanelProps {
-  appContainerRef: React.RefObject<HTMLDivElement>;
+  appContainerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const FloatingControlPanel: React.FC<FloatingControlPanelProps> = ({ appContainerRef }) => {

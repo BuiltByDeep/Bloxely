@@ -1,4 +1,3 @@
-import React from 'react';
 import { Clock, CheckSquare, StickyNote, Timer, KanbanSquare, Image } from 'lucide-react';
 
 export const ClockIcon = () => <Clock size={20} />;

@@ -18,7 +18,6 @@ const MusicPlayerWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const sleepTimerRef = useRef<number | null>(null);
-  const youtubePlayerRef = useRef<any>(null);
 
   // Preset lo-fi stations with multiple streaming sources
   const presetStations: MusicStation[] = [
@@ -138,10 +137,10 @@ const MusicPlayerWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
       try {
         switch (currentStation.source) {
           case 'youtube':
-            await setupYouTubeStream(currentStation);
+            await setupYouTubeStream();
             break;
           case 'soundcloud':
-            await setupSoundCloudStream(currentStation);
+            await setupSoundCloudStream();
             break;
           case 'local':
             await setupLocalAudio(currentStation);
@@ -159,7 +158,7 @@ const MusicPlayerWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
   }, [currentStation, volume]);
 
   // Setup YouTube streaming
-  const setupYouTubeStream = async (station: MusicStation) => {
+  const setupYouTubeStream = async () => {
     setStreamingMode('youtube');
     
     // For demo purposes, we'll use a fallback approach
@@ -181,7 +180,7 @@ const MusicPlayerWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
   };
 
   // Setup SoundCloud streaming
-  const setupSoundCloudStream = async (station: MusicStation) => {
+  const setupSoundCloudStream = async () => {
     setStreamingMode('soundcloud');
     
     try {
@@ -373,14 +372,7 @@ const MusicPlayerWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
   };
 
   // Sleep timer controls
-  const toggleSleepTimer = () => {
-    if (sleepTimer.enabled) {
-      setSleepTimer({ enabled: false, duration: 30, remaining: 0 });
-    } else {
-      setSleepTimer({ enabled: true, duration: 30, remaining: 30 });
-    }
-  };
-
+  
   const setSleepTimerDuration = (minutes: number) => {
     setSleepTimer({ enabled: true, duration: minutes, remaining: minutes });
     setShowSleepTimer(false);

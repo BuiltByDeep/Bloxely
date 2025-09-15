@@ -45,15 +45,7 @@ const CalendarWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
     return calendarData.tasks.filter(task => task.date === dateString);
   };
 
-  const formatTasksForDisplay = (tasks: CalendarTask[]) => {
-    if (tasks.length === 0) return '';
-
-    return tasks.map(task => {
-      const emoji = task.type === 'emergency' ? '🔴' : '🟢';
-      return `${emoji} ${task.content}`;
-    }).join('\n');
-  };
-
+  
   const navigateMonth = (direction: 'prev' | 'next') => {
     const newMonth = new Date(currentMonth);
     if (direction === 'prev') {

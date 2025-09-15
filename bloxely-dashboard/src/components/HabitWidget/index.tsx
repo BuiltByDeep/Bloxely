@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { BaseWidgetProps } from '../../types/widget';
-import { calculateStreak, generateDateRange, getTodayString } from './utils';
+import { generateDateRange, getTodayString } from './utils';
 
 interface Habit {
   id: string;
@@ -11,7 +11,7 @@ interface Habit {
 }
 
 interface HabitWidgetProps extends BaseWidgetProps {
-  widget: {
+  widget: BaseWidgetProps['widget'] & {
     content: {
       habits?: Habit[];
     };

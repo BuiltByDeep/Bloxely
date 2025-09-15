@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import type { BaseWidgetProps } from '../../types/widget';
 
 interface PersonalImageWidgetProps extends BaseWidgetProps {
-  widget: {
+  widget: BaseWidgetProps['widget'] & {
     content: {
       imageUrl?: string;
     };

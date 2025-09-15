@@ -12,7 +12,7 @@ interface Note {
 }
 
 interface VoiceTextNotesWidgetProps extends BaseWidgetProps {
-  widget: {
+  widget: BaseWidgetProps['widget'] & {
     content: {
       notes?: Note[];
     };
@@ -32,18 +32,18 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any | null>(null);
 
   // Initialize speech recognition
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
       recognitionRef.current.lang = 'en-US';
 
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: any) => {
         let interimTranscript = '';
         let finalTranscript = '';
 
@@ -59,7 +59,7 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
         setTranscript(finalTranscript + interimTranscript);
       };
 
-      recognitionRef.current.onerror = (event) => {
+      recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
       };
     }

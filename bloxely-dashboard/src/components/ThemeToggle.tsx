@@ -1,7 +1,5 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { useDashboardSelectors } from '../hooks/useDashboardSelectors';
-import { useDashboardActions } from '../hooks/useDashboardActions';
 
 const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
