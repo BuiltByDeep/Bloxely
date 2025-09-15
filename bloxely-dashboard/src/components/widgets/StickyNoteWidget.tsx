@@ -1,134 +1,140 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Palette, Move } from 'lucide-react';
 import type { BaseWidgetProps } from '../../types/widget';
 import type { StickyNoteData, StickyNoteColor } from '../../types/dashboard';
 
-// Predefined color palette with gradients
-const COLOR_PALETTE: StickyNoteColor[] = [
-  { name: 'Yellow', gradient: 'linear-gradient(to bottom right, #fff59d, #fff176)' },
-  { name: 'Pink', gradient: 'linear-gradient(to bottom right, #f48fb1, #f06292)' },
-  { name: 'Blue', gradient: 'linear-gradient(to bottom right, #81d4fa, #4fc3f7)' },
-  { name: 'Orange', gradient: 'linear-gradient(to bottom right, #ffb74d, #ffa726)' },
-  { name: 'Green', gradient: 'linear-gradient(to bottom right, #aed581, #9ccc65)' },
-  { name: 'Purple', gradient: 'linear-gradient(to bottom right, #ce93d8, #ba68c8)' },
-  { name: 'Mint', gradient: 'linear-gradient(to bottom right, #80cbc4, #4db6ac)' },
-  { name: 'Peach', gradient: 'linear-gradient(to bottom right, #ffab91, #ff8a65)' },
+// Predefined color palette with beautiful gradients
+const STICKY_NOTE_COLORS: StickyNoteColor[] = [
+  { name: 'Yellow', gradient: 'linear-gradient(135deg, #fff59d, #fff176)' },
+  { name: 'Pink', gradient: 'linear-gradient(135deg, #f8bbd9, #f48fb1)' },
+  { name: 'Blue', gradient: 'linear-gradient(135deg, #81d4fa, #4fc3f7)' },
+  { name: 'Green', gradient: 'linear-gradient(135deg, #a5d6a7, #81c784)' },
+  { name: 'Orange', gradient: 'linear-gradient(135deg, #ffcc02, #ffab00)' },
+  { name: 'Purple', gradient: 'linear-gradient(135deg, #ce93d8, #ba68c8)' },
+  { name: 'Mint', gradient: 'linear-gradient(135deg, #80cbc4, #4db6ac)' },
+  { name: 'Peach', gradient: 'linear-gradient(135deg, #ffab91, #ff8a65)' },
 ];
 
 const StickyNoteWidget: React.FC<BaseWidgetProps> = ({ widget, onUpdate }) => {
-  const stickyData = widget.content as StickyNoteData;
-  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  // Get current data or use defaults
+  const currentData = widget.content as StickyNoteData;
+  const content = currentData?.content || '';
+  const currentColor = currentData?.color || STICKY_NOTE_COLORS[0];
 
   // Auto-resize textarea
   useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
-  }, [stickyData.content]);
+  }, [content]);
 
-  // Handle text change with real-time save
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newContent = e.target.value;
+  const handleContentChange = (newContent: string) => {
     onUpdate({
-      ...stickyData,
       content: newContent,
+      color: currentColor,
     });
   };
 
-  // Handle color change
   const handleColorChange = (newColor: StickyNoteColor) => {
-    console.log('Color changed to:', newColor.name);
     onUpdate({
-      ...stickyData,
+      content,
       color: newColor,
     });
-    setIsColorPickerOpen(false);
+    setShowColorPicker(false);
   };
 
-  // Handle focus events
-  const handleFocus = () => {
-    setIsFocused(true);
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleContentChange(e.target.value);
   };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
-
-  const currentColor = stickyData?.color || COLOR_PALETTE[0];
-  const currentContent = stickyData?.content || '';
 
   return (
     <div 
-      className="sticky-note-widget h-full relative"
-      style={{ background: currentColor.gradient }}
+      className="sticky-note-widget h-full w-full relative rounded-lg transition-all duration-200"
+      style={{ 
+        background: currentColor.gradient
+      }}
     >
-      {/* Color picker button */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          console.log('Color picker button clicked, current state:', isColorPickerOpen);
-          setIsColorPickerOpen(!isColorPickerOpen);
-        }}
-        onMouseDown={(e) => e.stopPropagation()}
-        className="absolute bottom-2 left-2 w-8 h-8 rounded-full border-2 border-white/50 hover:border-white/80 transition-all z-10 clickable hover:scale-110 shadow-lg"
-        style={{ background: 'rgba(255, 255, 255, 0.9)' }}
-        title="Change color"
-      >
-        <div className="w-full h-full rounded-full flex items-center justify-center">
-          <svg className="w-4 h-4 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h12v11H4V4z" clipRule="evenodd" />
-          </svg>
-        </div>
-      </button>
-
-      {/* Color picker dropdown */}
-      {isColorPickerOpen && (
-        <div className="absolute bottom-10 left-2 bg-white rounded-lg shadow-lg p-2 z-50 border border-gray-200">
-          <div className="grid grid-cols-4 gap-2">
-            {COLOR_PALETTE.map((color, index) => (
-              <button
-                key={index}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleColorChange(color);
-                }}
-                onMouseDown={(e) => e.stopPropagation()}
-                className={`w-8 h-8 rounded-full border-2 hover:scale-110 transition-transform ${
-                  color.name === currentColor.name ? 'border-gray-800' : 'border-gray-300'
-                } clickable`}
-                style={{ background: color.gradient }}
-                title={color.name}
-              />
-            ))}
+      {/* Top bar with drag handle and color picker */}
+      <div className="absolute top-0 left-0 right-0 h-8 flex items-center justify-between px-3 z-10">
+        {/* Drag handle - left side */}
+        <div 
+          className="drag-handle flex items-center gap-1 px-2 py-1 rounded-md bg-black/5 hover:bg-black/10 transition-colors duration-200 cursor-move select-none"
+          title="Drag to move"
+        >
+          <Move size={12} className="text-black/60" />
+          <div className="flex gap-1">
+            <div className="w-1 h-1 bg-black/30 rounded-full"></div>
+            <div className="w-1 h-1 bg-black/30 rounded-full"></div>
+            <div className="w-1 h-1 bg-black/30 rounded-full"></div>
           </div>
         </div>
+        
+        {/* Color picker button - right side */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowColorPicker(!showColorPicker);
+          }}
+          className="p-2 rounded-full bg-black/10 hover:bg-black/20 transition-colors duration-200"
+          title="Change color"
+        >
+          <Palette size={16} className="text-black/60" />
+        </button>
+      </div>
+
+      {/* Color picker dropdown */}
+      {showColorPicker && (
+        <>
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setShowColorPicker(false)}
+          />
+          <div className="absolute top-14 right-3 bg-white/95 backdrop-blur-lg border border-white/50 rounded-xl p-3 shadow-2xl z-50 animate-fade-in">
+            <div className="grid grid-cols-4 gap-2">
+              {STICKY_NOTE_COLORS.map((color) => (
+                <button
+                  key={color.name}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleColorChange(color);
+                  }}
+                  className={`w-8 h-8 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
+                    currentColor.name === color.name 
+                      ? 'border-black/40 ring-2 ring-black/20' 
+                      : 'border-white/50 hover:border-black/30'
+                  }`}
+                  style={{ background: color.gradient }}
+                  title={color.name}
+                />
+              ))}
+            </div>
+          </div>
+        </>
       )}
 
-      {/* Text area */}
+      {/* Main text area */}
       <textarea
         ref={textareaRef}
-        value={currentContent}
-        onChange={handleTextChange}
-        onFocus={(e) => {
-          e.stopPropagation();
-          handleFocus();
-        }}
-        onBlur={handleBlur}
-        placeholder="Type your note here..."
-        className={`w-full h-full resize-none border-none outline-none bg-transparent p-4 pl-12 pr-4 text-gray-800 placeholder-gray-600 font-medium leading-relaxed relative z-10 ${
-          isFocused ? 'ring-2 ring-black/20 ring-inset' : ''
-        }`}
+        value={content}
+        onChange={handleTextareaChange}
+        placeholder="Write your note here..."
+        className="w-full h-full pt-10 pb-4 px-4 bg-transparent border-none outline-none resize-none text-black/80 placeholder-black/50 font-medium leading-relaxed rounded-lg"
         style={{
-          minHeight: '100%',
-          fontFamily: 'Inter, sans-serif',
+          fontFamily: "'Inter', 'Kalam', cursive",
           fontSize: 'clamp(12px, 2.5vw, 16px)',
+          minHeight: '100%',
+        }}
+        spellCheck={true}
+        onMouseDown={(e) => {
+          // Allow text selection and editing by preventing drag start
+          e.stopPropagation();
         }}
       />
-
-      </div>
+    </div>
   );
 };
 

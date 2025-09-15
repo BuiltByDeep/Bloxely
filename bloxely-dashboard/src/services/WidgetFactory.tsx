@@ -2,7 +2,6 @@ import React from 'react';
 import { widgetRegistry } from './WidgetRegistry';
 import PlaceholderWidget from '../components/widgets/PlaceholderWidget';
 import ClockWidget from '../components/widgets/ClockWidget';
-import StickyNoteWidget from '../components/widgets/StickyNoteWidget';
 import TodoWidget from '../components/widgets/TodoWidget';
 import PomodoroWidget from '../components/widgets/PomodoroWidget';
 import KanbanWidget from '../components/widgets/KanbanWidget';
@@ -13,6 +12,7 @@ import PriorityMatrixWidget from '../components/widgets/PriorityMatrixWidget';
 import YouTubePlayerWidget from '../components/widgets/YouTubePlayerWidget';
 import CalendarWidget from '../components/widgets/CalendarWidget';
 import VoiceTextNotesWidget from '../components/widgets/VoiceTextNotesWidget';
+import StickyNoteWidget from '../components/widgets/StickyNoteWidget';
 import type { WidgetType, WidgetData, WidgetConfig, WidgetDefinition, BaseWidgetProps } from '../types';
 
 class WidgetFactoryService {
@@ -94,7 +94,6 @@ export const widgetFactory = new WidgetFactoryService();
 // Register widget components
 widgetFactory.registerComponent('clock', ClockWidget);
 widgetFactory.registerComponent('todo', TodoWidget);
-widgetFactory.registerComponent('sticky-note', StickyNoteWidget);
 widgetFactory.registerComponent('pomodoro', PomodoroWidget);
 widgetFactory.registerComponent('kanban', KanbanWidget);
 widgetFactory.registerComponent('custom-wallpaper', CustomImageWidget);
@@ -104,3 +103,4 @@ widgetFactory.registerComponent('priority-matrix', PriorityMatrixWidget);
 widgetFactory.registerComponent('youtube-player', YouTubePlayerWidget);
 widgetFactory.registerComponent('calendar', CalendarWidget);
 widgetFactory.registerComponent('voice-text-notes', VoiceTextNotesWidget);
+widgetFactory.registerComponent('sticky-note', StickyNoteWidget);

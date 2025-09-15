@@ -30,10 +30,9 @@ const WidgetWrapper: React.FC<WidgetWrapperProps> = ({ widget, children }) => {
     e.stopPropagation();
   };
 
-  // Special handling for clock, sticky-note, pomodoro, habit-tracker, personal-image, priority-matrix, youtube-player, calendar, and voice-text-notes widgets - minimal wrapper styling
-  if (widget.type === 'clock' || widget.type === 'sticky-note' || widget.type === 'pomodoro' || widget.type === 'habit-tracker' || widget.type === 'personal-image' || widget.type === 'priority-matrix' || widget.type === 'youtube-player' || widget.type === 'calendar' || widget.type === 'voice-text-notes') {
-    // For sticky notes and priority matrix, don't use flex layout to allow proper resizing
-    const isStickyNote = widget.type === 'sticky-note';
+  // Special handling for clock, pomodoro, habit-tracker, personal-image, priority-matrix, youtube-player, calendar, voice-text-notes, and sticky-note widgets - minimal wrapper styling
+  if (widget.type === 'clock' || widget.type === 'pomodoro' || widget.type === 'habit-tracker' || widget.type === 'personal-image' || widget.type === 'priority-matrix' || widget.type === 'youtube-player' || widget.type === 'calendar' || widget.type === 'voice-text-notes' || widget.type === 'sticky-note') {
+    // For priority matrix, don't use flex layout to allow proper resizing
     const isPriorityMatrix = widget.type === 'priority-matrix';
 
     return (
@@ -65,7 +64,7 @@ const WidgetWrapper: React.FC<WidgetWrapperProps> = ({ widget, children }) => {
         </button>
 
         {/* Widget Content - full height and width */}
-        <div className={`h-full w-full overflow-hidden ${isStickyNote || isPriorityMatrix ? '' : 'flex items-center justify-center'}`}>
+        <div className={`h-full w-full overflow-hidden ${isPriorityMatrix ? '' : 'flex items-center justify-center'}`}>
           {children}
         </div>
       </div>

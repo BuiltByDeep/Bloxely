@@ -1438,69 +1438,90 @@ header {
 
 /* Sticky Note Widget Styling */
 .sticky-note-widget {
-  transition: all 0.1s ease-in-out;
-  overflow: hidden;
-  position: relative;
-  border-radius: 4px;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
-  transform: rotate(-1deg);
-  height: 100%;
-  width: 100%;
+  border-radius: 8px;
+  transform-origin: center center;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
 .sticky-note-widget:hover {
-  transform: scale(1.02) rotate(0deg);
-  box-shadow: 4px 6px 20px rgba(0, 0, 0, 0.2);
+  filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.25));
 }
 
-.sticky-note-widget:active {
+/* Sticky note paper texture */
+.sticky-note-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 24px,
+      rgba(0, 0, 0, 0.05) 25px,
+      rgba(0, 0, 0, 0.05) 26px
+    );
+  pointer-events: none;
+  opacity: 0.3;
+  z-index: 1;
 }
 
+/* Ensure text is above the texture */
 .sticky-note-widget textarea {
-  font-family: 'Inter', sans-serif;
-  line-height: 1.5;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  position: relative;
+  z-index: 2;
 }
 
-.sticky-note-widget textarea:focus {
-  outline: none;
+/* Smooth color transition */
+.sticky-note-widget {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sticky-note-widget textarea::placeholder {
-  font-style: italic;
-  opacity: 0.7;
+/* Sticky note drag handle styling */
+.sticky-note-widget .drag-handle {
+  /* This ensures the drag handle doesn't interfere with text selection */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-/* Color picker styling */
-.sticky-note-widget .color-picker-dropdown {
-  animation: fadeIn 0.2s ease-out;
+/* Visual feedback when dragging */
+.widget-container.dragging .sticky-note-widget .drag-handle {
+  background: rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
 }
 
-@keyframes fadeIn {
+/* Ensure the drag handle is visible on hover */
+.sticky-note-widget:hover .drag-handle {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Color picker animations */
+@keyframes colorPickerSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Responsive text sizing for sticky notes */
-@container (max-width: 200px) {
-  .sticky-note-widget textarea {
-    font-size: 12px;
-    padding: 8px;
-  }
+.color-picker-dropdown {
+  animation: colorPickerSlideIn 0.2s ease-out;
 }
 
-@container (max-width: 150px) {
-  .sticky-note-widget textarea {
-    font-size: 10px;
-    padding: 6px;
-  }
+/* Enhanced shadow effects */
+.sticky-note-shadow {
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.15)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+}
+
+.sticky-note-shadow:hover {
+  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
 /* Dark Theme Enhancements */
@@ -2433,6 +2454,255 @@ button:active, .clickable:active {
 
 .dark .bookmark-folder-form-title {
   color: #cbd5e1;
+}
+
+/* Voice Text Notes Widget Responsive Styles */
+.voice-text-notes-responsive {
+  container-type: inline-size;
+  font-size: clamp(0.75rem, 2.5cqw, 1rem);
+}
+
+/* Responsive font sizes */
+.voice-text-notes-responsive .text-xs {
+  font-size: clamp(0.65rem, 2cqw, 0.75rem);
+}
+
+.voice-text-notes-responsive .text-sm {
+  font-size: clamp(0.75rem, 2.5cqw, 0.875rem);
+}
+
+.voice-text-notes-responsive .text-base {
+  font-size: clamp(0.875rem, 3cqw, 1rem);
+}
+
+.voice-text-notes-responsive .text-lg {
+  font-size: clamp(1rem, 3.5cqw, 1.125rem);
+}
+
+/* Responsive icon sizes */
+.voice-text-notes-responsive .w-3,
+.voice-text-notes-responsive .h-3 {
+  width: clamp(0.75rem, 2cqw, 0.875rem);
+  height: clamp(0.75rem, 2cqw, 0.875rem);
+}
+
+.voice-text-notes-responsive .w-4,
+.voice-text-notes-responsive .h-4 {
+  width: clamp(0.875rem, 2.5cqw, 1rem);
+  height: clamp(0.875rem, 2.5cqw, 1rem);
+}
+
+.voice-text-notes-responsive .w-5,
+.voice-text-notes-responsive .h-5 {
+  width: clamp(1rem, 3cqw, 1.25rem);
+  height: clamp(1rem, 3cqw, 1.25rem);
+}
+
+.voice-text-notes-responsive .w-6,
+.voice-text-notes-responsive .h-6 {
+  width: clamp(1.25rem, 3.5cqw, 1.5rem);
+  height: clamp(1.25rem, 3.5cqw, 1.5rem);
+}
+
+.voice-text-notes-responsive .w-8,
+.voice-text-notes-responsive .h-8 {
+  width: clamp(1.5rem, 4cqw, 2rem);
+  height: clamp(1.5rem, 4cqw, 2rem);
+}
+
+.voice-text-notes-responsive .w-10,
+.voice-text-notes-responsive .h-10 {
+  width: clamp(2rem, 5cqw, 2.5rem);
+  height: clamp(2rem, 5cqw, 2.5rem);
+}
+
+/* Responsive spacing */
+.voice-text-notes-responsive .gap-2 {
+  gap: clamp(0.375rem, 1.5cqw, 0.5rem);
+}
+
+.voice-text-notes-responsive .gap-3 {
+  gap: clamp(0.5rem, 2cqw, 0.75rem);
+}
+
+.voice-text-notes-responsive .gap-4 {
+  gap: clamp(0.75rem, 2.5cqw, 1rem);
+}
+
+.voice-text-notes-responsive .p-2 {
+  padding: clamp(0.375rem, 1.5cqw, 0.5rem);
+}
+
+.voice-text-notes-responsive .p-3 {
+  padding: clamp(0.5rem, 2cqw, 0.75rem);
+}
+
+.voice-text-notes-responsive .p-4 {
+  padding: clamp(0.75rem, 2.5cqw, 1rem);
+}
+
+.voice-text-notes-responsive .px-3 {
+  padding-left: clamp(0.5rem, 2cqw, 0.75rem);
+  padding-right: clamp(0.5rem, 2cqw, 0.75rem);
+}
+
+.voice-text-notes-responsive .px-4 {
+  padding-left: clamp(0.75rem, 2.5cqw, 1rem);
+  padding-right: clamp(0.75rem, 2.5cqw, 1rem);
+}
+
+.voice-text-notes-responsive .py-2 {
+  padding-top: clamp(0.375rem, 1.5cqw, 0.5rem);
+  padding-bottom: clamp(0.375rem, 1.5cqw, 0.5rem);
+}
+
+.voice-text-notes-responsive .py-3 {
+  padding-top: clamp(0.5rem, 2cqw, 0.75rem);
+  padding-bottom: clamp(0.5rem, 2cqw, 0.75rem);
+}
+
+.voice-text-notes-responsive .m-2 {
+  margin: clamp(0.375rem, 1.5cqw, 0.5rem);
+}
+
+.voice-text-notes-responsive .m-3 {
+  margin: clamp(0.5rem, 2cqw, 0.75rem);
+}
+
+.voice-text-notes-responsive .m-4 {
+  margin: clamp(0.75rem, 2.5cqw, 1rem);
+}
+
+.voice-text-notes-responsive .mb-2 {
+  margin-bottom: clamp(0.375rem, 1.5cqw, 0.5rem);
+}
+
+.voice-text-notes-responsive .mb-3 {
+  margin-bottom: clamp(0.5rem, 2cqw, 0.75rem);
+}
+
+.voice-text-notes-responsive .mb-4 {
+  margin-bottom: clamp(0.75rem, 2.5cqw, 1rem);
+}
+
+/* Responsive border radius */
+.voice-text-notes-responsive .rounded-lg {
+  border-radius: clamp(0.375rem, 1.5cqw, 0.5rem);
+}
+
+.voice-text-notes-responsive .rounded-xl {
+  border-radius: clamp(0.5rem, 2cqw, 0.75rem);
+}
+
+/* Container-based responsive breakpoints */
+@container (max-width: 300px) {
+  .voice-text-notes-responsive {
+    font-size: 0.75rem;
+  }
+  
+  .voice-text-notes-responsive .flex {
+    flex-direction: column;
+    gap: clamp(0.375rem, 2cqw, 0.5rem);
+  }
+  
+  .voice-text-notes-responsive .input-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .voice-text-notes-responsive .input-section .flex-1 {
+    margin-bottom: clamp(0.375rem, 2cqw, 0.5rem);
+  }
+  
+  .voice-text-notes-responsive .button-group {
+    display: flex;
+    gap: clamp(0.25rem, 1cqw, 0.375rem);
+  }
+  
+  .voice-text-notes-responsive .button-group button {
+    flex: 1;
+    font-size: clamp(0.65rem, 2cqw, 0.75rem);
+    padding: clamp(0.375rem, 1.5cqw, 0.5rem) clamp(0.5rem, 2cqw, 0.75rem);
+  }
+  
+  .voice-text-notes-responsive .note-item {
+    padding: clamp(0.5rem, 2cqw, 0.75rem);
+  }
+  
+  .voice-text-notes-responsive .note-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(0.25rem, 1cqw, 0.375rem);
+  }
+  
+  .voice-text-notes-responsive .note-actions {
+    align-self: flex-end;
+  }
+}
+
+@container (max-width: 250px) {
+  .voice-text-notes-responsive .text-6xl {
+    font-size: clamp(2rem, 8cqw, 3rem);
+  }
+  
+  .voice-text-notes-responsive .note-icon {
+    width: clamp(1.5rem, 6cqw, 2rem);
+    height: clamp(1.5rem, 6cqw, 2rem);
+  }
+  
+  .voice-text-notes-responsive .empty-state-text {
+    font-size: clamp(0.75rem, 3cqw, 0.875rem);
+  }
+  
+  .voice-text-notes-responsive .audio-controls {
+    height: clamp(1.5rem, 6cqw, 2rem);
+  }
+}
+
+@container (max-width: 200px) {
+  .voice-text-notes-responsive {
+    font-size: 0.625rem;
+  }
+  
+  .voice-text-notes-responsive .input-section {
+    gap: clamp(0.25rem, 1cqw, 0.375rem);
+  }
+  
+  .voice-text-notes-responsive .note-item {
+    padding: clamp(0.375rem, 1.5cqw, 0.5rem);
+  }
+  
+  .voice-text-notes-responsive .text-6xl {
+    font-size: clamp(1.5rem, 7cqw, 2rem);
+  }
+}
+
+/* Responsive audio controls */
+.voice-text-notes-responsive audio {
+  width: 100%;
+  height: clamp(1.5rem, 4cqw, 2rem);
+  min-height: 1.5rem;
+}
+
+/* Responsive textarea */
+.voice-text-notes-responsive textarea {
+  font-size: clamp(0.75rem, 2.5cqw, 0.875rem);
+  line-height: 1.4;
+}
+
+/* Responsive recording timer */
+.voice-text-notes-responsive .recording-timer {
+  font-size: clamp(0.625rem, 2cqw, 0.75rem);
+}
+
+/* Responsive empty state */
+.voice-text-notes-responsive .empty-state {
+  padding: clamp(1rem, 4cqw, 2rem);
+}
+
+.voice-text-notes-responsive .empty-state .text-6xl {
+  font-size: clamp(2.5rem, 10cqw, 4rem);
+  margin-bottom: clamp(0.5rem, 2cqw, 1rem);
 }
 
 /* Countdown Widget Styles */

@@ -48,18 +48,6 @@ const defaultWidgets: WidgetDefinition[] = [
     defaultContent: { tasks: [] },
   },
   {
-    type: 'sticky-note',
-    name: 'Sticky Note',
-    description: 'Quick notes and reminders',
-    icon: '📄',
-    defaultSize: { w: 6, h: 4, minW: 4, minH: 3 },
-    defaultConfig: { title: 'Sticky Note' },
-    defaultContent: { 
-      content: '', 
-      color: { name: 'Yellow', gradient: 'linear-gradient(to bottom right, #fff59d, #fff176)' }
-    },
-  },
-  {
     type: 'pomodoro',
     name: 'Pomodoro Timer',
     description: 'Focus timer with work/break cycles',
@@ -154,6 +142,18 @@ const defaultWidgets: WidgetDefinition[] = [
     defaultSize: { w: 10, h: 12, minW: 8, minH: 8 },
     defaultConfig: { title: 'Voice + Text Notes' },
     defaultContent: { notes: [] },
+  },
+  {
+    type: 'sticky-note',
+    name: 'Sticky Note',
+    description: 'Quick notes with colorful backgrounds',
+    icon: '📄',
+    defaultSize: { w: 4, h: 4, minW: 3, minH: 3, maxW: 8, maxH: 8 },
+    defaultConfig: { title: 'Sticky Note' },
+    defaultContent: {
+      content: '',
+      color: { name: 'Yellow', gradient: 'linear-gradient(135deg, #fff59d, #fff176)' },
+    },
   },
         ];
 

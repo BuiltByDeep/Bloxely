@@ -254,10 +254,10 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
   }, []);
 
   return (
-    <div className="h-full w-full flex flex-col bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-2xl shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm">
+    <div className="h-full w-full flex flex-col bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-2xl shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm voice-text-notes-responsive">
       {/* Input Section */}
-      <div className="p-6 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/30 dark:bg-slate-800/30 backdrop-blur-sm">
-        <div className="flex gap-3 mb-4">
+      <div className="p-4 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/30 dark:bg-slate-800/30 backdrop-blur-sm">
+        <div className="input-section flex gap-3 mb-4">
           <div className="flex-1 relative">
             <input
               type="text"
@@ -267,65 +267,67 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
               placeholder="Type a note..."
               className="w-full px-4 py-3 bg-white/70 dark:bg-slate-700/70 border border-slate-300/50 dark:border-slate-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-500/70 dark:placeholder-slate-400/70 backdrop-blur-sm transition-all duration-200 shadow-sm"
             />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
               <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
             </div>
           </div>
-          <button
-            onClick={saveTextNote}
-            disabled={!newNote.trim()}
-            className="px-5 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-slate-300 disabled:to-slate-400 dark:disabled:from-slate-600 dark:disabled:to-slate-700 text-white rounded-xl transition-all duration-200 text-sm font-semibold disabled:cursor-not-allowed shadow-lg hover:shadow-xl disabled:shadow-none transform hover:scale-105 disabled:scale-100"
-          >
-            Add
-          </button>
-          <button
-            onClick={isRecording ? stopRecording : startRecording}
-            className={`px-5 py-3 rounded-xl transition-all duration-200 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 ${
-              isRecording
-                ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-red-500/25'
-                : 'bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 hover:from-slate-200 hover:to-slate-300 dark:hover:from-slate-600 dark:hover:to-slate-500 text-slate-700 dark:text-slate-300 shadow-slate-200/50'
-            }`}
-          >
-            {isRecording ? (
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse shadow-lg"></div>
-                <span className="font-mono text-xs">{formatTime(recordingTime)}</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-              </div>
-            )}
-          </button>
+          <div className="button-group flex gap-2">
+            <button
+              onClick={saveTextNote}
+              disabled={!newNote.trim()}
+              className="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-slate-300 disabled:to-slate-400 dark:disabled:from-slate-600 dark:disabled:to-slate-700 text-white rounded-xl transition-all duration-200 text-sm font-semibold disabled:cursor-not-allowed shadow-lg hover:shadow-xl disabled:shadow-none transform hover:scale-105 disabled:scale-100"
+            >
+              Add
+            </button>
+            <button
+              onClick={isRecording ? stopRecording : startRecording}
+              className={`px-4 py-3 rounded-xl transition-all duration-200 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 ${
+                isRecording
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-red-500/25'
+                  : 'bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 hover:from-slate-200 hover:to-slate-300 dark:hover:from-slate-600 dark:hover:to-slate-500 text-slate-700 dark:text-slate-300 shadow-slate-200/50'
+              }`}
+            >
+              {isRecording ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-white rounded-full animate-pulse shadow-lg"></div>
+                  <span className="recording-timer font-mono text-xs">{formatTime(recordingTime)}</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  </svg>
+                </div>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Voice Note Preview */}
         {audioUrl && (
           <div className="bg-gradient-to-r from-blue-50/80 to-indigo-50/80 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200/50 dark:border-blue-800/50 rounded-xl p-4 space-y-3 backdrop-blur-sm shadow-inner">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <audio src={audioUrl} controls className="w-full h-8 rounded-lg" />
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <audio src={audioUrl} controls className="audio-controls w-full rounded-lg" />
               </div>
               <button
                 onClick={saveVoiceNote}
-                className="ml-4 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex-shrink-0"
               >
                 Save
               </button>
             </div>
             {transcript && (
               <div className="text-sm text-slate-600 dark:text-slate-400 bg-white/50 dark:bg-slate-800/50 rounded-lg p-3 backdrop-blur-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg className="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   <span className="font-semibold text-blue-600 dark:text-blue-400">Transcript:</span>
                 </div>
-                <p className="ml-6 italic">{transcript}</p>
+                <p className="ml-6 italic break-words">{transcript}</p>
               </div>
             )}
           </div>
@@ -333,26 +335,26 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
       </div>
 
       {/* Notes List */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {notes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500">
+          <div className="empty-state flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500">
             <div className="text-6xl mb-4 opacity-50">📝</div>
-            <p className="text-base text-center font-medium">No notes yet.</p>
-            <p className="text-sm text-center opacity-75">Start typing or recording!</p>
+            <p className="empty-state-text text-base text-center font-medium">No notes yet.</p>
+            <p className="empty-state-text text-sm text-center opacity-75">Start typing or recording!</p>
           </div>
         ) : (
           notes.map((note) => (
             <div
               key={note.id}
-              className={`group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-4 shadow-sm border transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${
+              className={`note-item group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-4 shadow-sm border transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${
                 note.important
                   ? 'border-red-200/50 dark:border-red-800/50 bg-gradient-to-r from-red-50/30 to-pink-50/30 dark:from-red-900/20 dark:to-pink-900/20 shadow-red-500/10'
                   : 'border-slate-200/50 dark:border-slate-700/50 hover:border-slate-300/50 dark:hover:border-slate-600/50'
               }`}
             >
-              <div className="flex items-start gap-4">
+              <div className="note-header flex items-start gap-4">
                 {/* Note Type Icon */}
-                <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${
+                <div className={`note-icon flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${
                   note.type === 'voice'
                     ? 'bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/50 dark:to-indigo-900/50 text-blue-600 dark:text-blue-400'
                     : 'bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/50 dark:to-teal-900/50 text-emerald-600 dark:text-emerald-400'
@@ -378,7 +380,7 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
                         rows={3}
                         placeholder="Edit your note..."
                       />
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
                         <button
                           onClick={saveEdit}
                           className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg text-xs font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
@@ -404,17 +406,17 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
                       {note.type === 'voice' ? (
                         <div className="space-y-3">
                           {note.audioUrl && (
-                            <audio src={note.audioUrl} controls className="w-full h-8 rounded-lg" />
+                            <audio src={note.audioUrl} controls className="audio-controls w-full rounded-lg" />
                           )}
                           {note.transcript && (
                             <div className="bg-blue-50/50 dark:bg-blue-900/20 rounded-lg p-3 backdrop-blur-sm">
                               <div className="flex items-center gap-2 mb-2">
-                                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 <span className="font-semibold text-blue-600 dark:text-blue-400 text-sm">Transcript</span>
                               </div>
-                              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed break-words">
                                 {note.transcript}
                               </p>
                             </div>
@@ -422,7 +424,7 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
                         </div>
                       ) : (
                         <div className="bg-emerald-50/50 dark:bg-emerald-900/20 rounded-lg p-3 backdrop-blur-sm">
-                          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed break-words">
                             {note.content}
                           </p>
                         </div>
@@ -432,7 +434,7 @@ const VoiceTextNotesWidget: React.FC<VoiceTextNotesWidgetProps> = ({ widget, onU
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="note-actions flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <button
                     onClick={() => toggleImportant(note.id)}
                     className={`p-2 rounded-lg transition-all duration-200 hover:scale-110 ${
